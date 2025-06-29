@@ -29,7 +29,7 @@ jobs:
           host: ${{ secrets.DROPLET_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "dist/ngx-mfe-orchestrator-ui/*"
+          source: "dist/ngx-mfe-orchestrator-ui/browser*"
           target: "/opt/ngx-mfe-orchestrator-ui/"
           strip_components: 2
 
