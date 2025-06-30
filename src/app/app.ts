@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { DocumentComponent } from './components/document.component';
-import { HeroComponent } from './components/hero.component';
 import { NavBarComponent } from './components/nav-bar.component';
 import { RouterOutlet } from '@angular/router';
 

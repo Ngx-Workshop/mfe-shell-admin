@@ -1,13 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeroComponent } from '../components/hero.component';
-import { DocumentComponent } from '../components/document.component';
+import { MfeRemoteComponent } from '../components/mfe-remote.component';
+import { tap } from 'rxjs';
+import { MfeRemoteService } from '../services/mfe-remote.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'ngx-mfe-remotes',
-  imports: [HeroComponent, DocumentComponent],
+  imports: [HeroComponent, MfeRemoteComponent, AsyncPipe],
   template: `
     <ngx-hero></ngx-hero>
-    <ngx-document></ngx-document>
+    @for (mfeRemote of mfeRemotes | async; track $index) {
+    <ngx-mfe-remote [mfeRemote]="mfeRemote"></ngx-mfe-remote>
+    }
   `,
   styles: [
     `
@@ -18,7 +23,7 @@ import { DocumentComponent } from '../components/document.component';
         justify-content: center;
         align-items: center;
         gap: 3em;
-        ngx-document {
+        ngx-mfe-remote {
           width: 100%;
           max-width: 800px;
         }
@@ -27,6 +32,9 @@ import { DocumentComponent } from '../components/document.component';
   ],
 })
 export class MfeRemoteListComponent {
-  // This component can be expanded with a sign-in form and logic
-  // For now, it serves as a placeholder for the sign-in route
+  mfeRemotes = inject(MfeRemoteService).mfeRemotes$.pipe(
+    tap((remotes) => {
+      console.log('Fetched MFE remotes:', remotes);
+    })
+  );
 }
