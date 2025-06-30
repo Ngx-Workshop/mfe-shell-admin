@@ -37,9 +37,26 @@ export class MfeRemoteService {
     return this.httpClient
       .patch<IMfeRemote>(`/api/mfe-remotes/${_id}`, partialMfeRemote)
       .pipe(
-        switchMap(this.fetchMfeRemotes),
+        switchMap(() => this.fetchMfeRemotes()),
         catchError((error) => {
           console.warn('Error updating MFE remote:', error);
+          return of([]);
+        })
+      );
+  }
+
+  archiveMfeRemote(mfeRemote: IMfeRemote) {
+    return this.httpClient
+      .patch<IMfeRemote>(
+        `/api/mfe-remotes/${mfeRemote._id}/${
+          mfeRemote.archived ? 'unarchive' : 'archive'
+        }`,
+        void 0
+      )
+      .pipe(
+        switchMap(() => this.fetchMfeRemotes()),
+        catchError((error) => {
+          console.warn('Error archiving MFE remote:', error);
           return of([]);
         })
       );

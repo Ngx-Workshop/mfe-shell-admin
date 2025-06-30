@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { HeroComponent } from '../components/hero.component';
 import { MfeRemoteComponent } from '../components/mfe-remote.component';
-import { lastValueFrom, tap } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { IMfeRemote, MfeRemoteService } from '../services/mfe-remote.service';
 import { AsyncPipe } from '@angular/common';
 
@@ -11,7 +11,11 @@ import { AsyncPipe } from '@angular/common';
   template: `
     <ngx-hero></ngx-hero>
     @for (mfeRemote of mfeRemotes | async; track $index) {
-    <ngx-mfe-remote [mfeRemote]="mfeRemote" (update)="updateMfeRemote($event)"></ngx-mfe-remote>
+    <ngx-mfe-remote
+      [mfeRemote]="mfeRemote"
+      (update)="updateMfeRemote($event)"
+      (archive)="archiveMfeRemote($event)"
+    ></ngx-mfe-remote>
     }
   `,
   styles: [
@@ -32,14 +36,14 @@ import { AsyncPipe } from '@angular/common';
   ],
 })
 export class MfeRemoteListComponent {
-  mfeRemoteService = inject(MfeRemoteService)
-  mfeRemotes = this.mfeRemoteService.mfeRemotes$.pipe(
-    tap((remotes) => {
-      console.log('Fetched MFE remotes:', remotes);
-    })
-  );
+  mfeRemoteService = inject(MfeRemoteService);
+  mfeRemotes = this.mfeRemoteService.mfeRemotes$;
 
   updateMfeRemote(remote: IMfeRemote) {
     lastValueFrom(this.mfeRemoteService.updateMfeRemote(remote));
+  }
+
+  archiveMfeRemote(remote: IMfeRemote) {
+    lastValueFrom(this.mfeRemoteService.archiveMfeRemote(remote));
   }
 }

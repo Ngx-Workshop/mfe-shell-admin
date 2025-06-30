@@ -42,7 +42,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
         </mat-card-content>
         <mat-card-actions>
           <button matButton (click)="updateRemote()">Update</button>
-          <button matButton>{{ mfe.archived ? 'Archived' : 'Archive' }}</button>
+          <button matButton (click)="archiveRemote()">
+            {{ mfe.archived ? 'Archived' : 'Archive' }}
+          </button>
         </mat-card-actions>
       </mat-card>
     </form>
@@ -68,6 +70,7 @@ export class MfeRemoteComponent {
   mfeRemote = input.required<IMfeRemote>();
 
   update = output<IMfeRemote>();
+  archive = output<IMfeRemote>();
 
   mfeRemoteForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],
@@ -90,10 +93,14 @@ export class MfeRemoteComponent {
     if (this.mfeRemoteForm.valid) {
       this.update.emit({
         ...this.mfeRemote(),
-        ...this.mfeRemoteForm.getRawValue()
+        ...this.mfeRemoteForm.getRawValue(),
       });
     } else {
       console.warn('Form is invalid', this.mfeRemoteForm.errors);
     }
+  }
+
+  archiveRemote() {
+    this.archive.emit(this.mfeRemote());
   }
 }
