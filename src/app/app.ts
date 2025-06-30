@@ -2,37 +2,27 @@ import { Component } from '@angular/core';
 import { DocumentComponent } from './components/document.component';
 import { HeroComponent } from './components/hero.component';
 import { NavBarComponent } from './components/nav-bar.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'ngx-root',
-  imports: [NavBarComponent, HeroComponent, DocumentComponent],
+  imports: [NavBarComponent, RouterOutlet],
   template: `
     <ngx-nav-bar></ngx-nav-bar>
     <main>
-      <ngx-hero></ngx-hero>
-      <ngx-document></ngx-document>
+      <router-outlet></router-outlet>
     </main>
   `,
   styles: [
     `
-      main {
-        margin-top: 56px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 3em;
-        ngx-document {
-          width: 100%;
-          max-width: 800px;
+      :host {
+        ngx-nav-bar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 2;
         }
-      }
-      ngx-nav-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 2;
       }
     `,
   ],
