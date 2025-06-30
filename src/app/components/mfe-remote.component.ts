@@ -67,7 +67,7 @@ export class MfeRemoteComponent {
   formBuilder = inject(FormBuilder);
   mfeRemote = input.required<IMfeRemote>();
 
-  update = output<Partial<IMfeRemote>>();
+  update = output<IMfeRemote>();
 
   mfeRemoteForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],
@@ -88,7 +88,10 @@ export class MfeRemoteComponent {
 
   updateRemote() {
     if (this.mfeRemoteForm.valid) {
-      this.update.emit(this.mfeRemoteForm.getRawValue());
+      this.update.emit({
+        ...this.mfeRemote(),
+        ...this.mfeRemoteForm.getRawValue()
+      });
     } else {
       console.warn('Form is invalid', this.mfeRemoteForm.errors);
     }

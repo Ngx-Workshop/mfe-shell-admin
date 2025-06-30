@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, of, switchMap, tap } from 'rxjs';
 
 export interface IMfeRemote {
+  _id: string;
   name: string;
   remoteEntryUrl: string;
   version: string;
@@ -10,6 +11,7 @@ export interface IMfeRemote {
   description?: string;
   lastUpdated?: Date;
   archived?: boolean;
+  __v?: number;
 }
 
 @Injectable({
@@ -22,12 +24,22 @@ export class MfeRemoteService {
   mfeRemotes$ = this.mfeRemotes.asObservable();
 
   fetchMfeRemotes() {
+    return this.httpClient.get<IMfeRemote[]>('/api/mfe-remotes').pipe(
+      tap((remotes) => this.mfeRemotes.next(remotes)),
+      catchError((error) => {
+        console.warn('Error fetching MFE remotes:', error);
+        return of([]);
+      })
+    );
+  }
+
+  updateMfeRemote({ _id, lastUpdated, __v, ...partialMfeRemote }: IMfeRemote) {
     return this.httpClient
-      .get<IMfeRemote[]>('/api/mfe-remotes')
+      .patch<IMfeRemote>(`/api/mfe-remotes/${_id}`, partialMfeRemote)
       .pipe(
-        tap((remotes) => this.mfeRemotes.next(remotes)),
+        switchMap(this.fetchMfeRemotes),
         catchError((error) => {
-          console.warn('Error fetching MFE remotes:', error);
+          console.warn('Error updating MFE remote:', error);
           return of([]);
         })
       );
