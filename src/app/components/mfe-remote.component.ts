@@ -27,15 +27,15 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
           <h5>Last Updated: {{ mfe.lastUpdated | date }}</h5>
         </mat-card-header>
         <mat-card-content>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Name</mat-label>
             <input formControlName="name" matInput />
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Description</mat-label>
             <textarea formControlName="description" matInput></textarea>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Remote Entry URL</mat-label>
             <input formControlName="remoteEntryUrl" matInput />
           </mat-form-field>
@@ -73,9 +73,9 @@ export class MfeRemoteComponent {
   archive = output<IMfeRemote>();
 
   mfeRemoteForm = this.formBuilder.nonNullable.group({
-    name: ['', Validators.required],
+    name: ['', [Validators.required, Validators.minLength(3)]],
     description: [''],
-    remoteEntryUrl: ['', [Validators.required]],
+    remoteEntryUrl: ['', [Validators.required, Validators.pattern('https?://.+')]],
   });
 
   constructor() {

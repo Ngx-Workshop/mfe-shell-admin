@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
 import { NavBarComponent } from './components/nav-bar.component';
 import { RouterOutlet } from '@angular/router';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 @Component({
   selector: 'ngx-root',
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' },
+    },
+  ],
   imports: [NavBarComponent, RouterOutlet],
   template: `
     <ngx-nav-bar></ngx-nav-bar>
