@@ -6,7 +6,7 @@ export interface IMfeRemote {
   _id: string;
   name: string;
   remoteEntryUrl: string;
-  version: string;
+  version: number;
   status?: string;
   description?: string;
   lastUpdated?: Date;
@@ -31,6 +31,18 @@ export class MfeRemoteService {
         return of([]);
       })
     );
+  }
+
+  createMfeRemote(mfeRemote: IMfeRemote) {
+    return this.httpClient
+      .post<IMfeRemote>('/api/mfe-remotes', mfeRemote)
+      .pipe(
+        switchMap(() => this.fetchMfeRemotes()),
+        catchError((error) => {
+          console.warn('Error creating MFE remote:', error);
+          return of([]);
+        })
+      );
   }
 
   updateMfeRemote({ _id, lastUpdated, __v, ...partialMfeRemote }: IMfeRemote) {

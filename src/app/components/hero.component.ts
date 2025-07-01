@@ -1,13 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import {
+  MatDialog
+} from '@angular/material/dialog';
+import { iif, lastValueFrom, of, switchMap, tap } from 'rxjs';
+import { CreateMFEDialog } from './create-mfe-dialog.component';
+import { MfeRemoteService } from '../services/mfe-remote.service';
 
 @Component({
   selector: 'ngx-hero',
+  imports: [MatButton],
   template: `
     <header class="header-background">
       <div class="header-section">
         <div class="header-headline">
           <h1>Ngx MFE Orchestrator</h1>
           <h2>A tool to manage MFE remotes!</h2>
+        </div>
+        <div class="header-actions">
+          <button mat-raised-button (click)="openDialog()">Create MFE</button>
         </div>
       </div>
     </header>
@@ -59,9 +70,34 @@ import { Component } from '@angular/core';
               margin: 15px 0 25px 0;
             }
           }
+          .header-actions {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            button {
+              margin: 0 5px;
+            }
+          }
         }
       }
     `,
   ],
 })
-export class HeroComponent {}
+export class HeroComponent {
+  dialog = inject(MatDialog);
+  mfeRemoteService = inject(MfeRemoteService);
+
+  openDialog(): void {
+    lastValueFrom(
+      this.dialog.open(CreateMFEDialog).afterClosed().pipe(
+        switchMap((mfeRemote) =>
+          iif(
+            () => !!mfeRemote,
+            this.mfeRemoteService.createMfeRemote(mfeRemote),
+            of(void 0)
+          )
+        )
+      )
+    );
+  }
+}

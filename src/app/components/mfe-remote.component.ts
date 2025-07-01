@@ -90,14 +90,12 @@ export class MfeRemoteComponent {
   }
 
   updateRemote() {
-    if (this.mfeRemoteForm.valid) {
-      this.update.emit({
-        ...this.mfeRemote(),
-        ...this.mfeRemoteForm.getRawValue(),
-      });
-    } else {
-      console.warn('Form is invalid', this.mfeRemoteForm.errors);
-    }
+    this.mfeRemoteForm.valid
+      ? this.update.emit({
+          ...this.mfeRemote(),
+          ...this.mfeRemoteForm.getRawValue(),
+        })
+      : console.warn('Form is invalid', this.mfeRemoteForm.errors);
   }
 
   archiveRemote() {
