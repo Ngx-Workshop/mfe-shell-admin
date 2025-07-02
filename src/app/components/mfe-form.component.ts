@@ -1,16 +1,25 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, input, model } from '@angular/core';
+import { Component, inject, input, model, output } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
   ReactiveFormsModule,
   FormBuilder,
   Validators,
   FormGroup,
+  FormControlStatus,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { of, startWith, withLatestFrom, map, mergeMap, tap } from 'rxjs';
+import {
+  of,
+  startWith,
+  withLatestFrom,
+  map,
+  mergeMap,
+  tap,
+  forkJoin,
+} from 'rxjs';
 import { IMfeRemote } from '../services/mfe-remote.service';
 
 type ViewModel = {
@@ -67,17 +76,19 @@ type ViewModel = {
 export class MfeFormComponent {
   formBuilder = inject(FormBuilder);
 
-  value = input<Partial<IMfeRemote>>({
+  valueChange = output<Partial<IMfeRemote>>();
+  formStatus = output<FormControlStatus | null>();
+  initValue = input<Partial<IMfeRemote>>({
     name: '',
     description: '',
     remoteEntryUrl: '',
   });
-  value$ = toObservable(this.value);
+  initValue$ = toObservable(this.initValue);
 
-  viewModel$ = this.value$.pipe(
+  viewModel$ = this.initValue$.pipe(
     map((value) => ({
       mfeRemoteForm: this.formBuilder.nonNullable.group({
-        name: [value.name, Validators.required, Validators.minLength(3)],
+        name: [value.name, Validators.required],
         description: [value.description],
         remoteEntryUrl: [
           value.remoteEntryUrl,
@@ -87,9 +98,6 @@ export class MfeFormComponent {
       errorMessages: {
         required: 'Required',
         pattern: 'Must be a valid URL',
-        minlength: 'Must be at least 3 characters long',
-
-        
       },
       formErrorMessages: {
         name: '',
@@ -97,18 +105,26 @@ export class MfeFormComponent {
       },
     })),
     mergeMap((viewModel: ViewModel) =>
-      this.watchStatusChanges(viewModel).pipe(
+      forkJoin([
+        this.watchStatusChanges(viewModel),
+        this.watchFormValueChanges(viewModel),
+      ]).pipe(
         startWith(null),
-        withLatestFrom(of(viewModel)),
-        map(([_status, vm]) => vm)
+        map(() => viewModel)
       )
     )
-
   );
 
   watchStatusChanges(viewModel: ViewModel) {
     return viewModel.mfeRemoteForm.statusChanges.pipe(
+      tap((status) => this.formStatus.emit(status)),
       tap(() => this.setErrorsMessages(viewModel))
+    );
+  }
+
+  watchFormValueChanges(viewModel: ViewModel) {
+    return viewModel.mfeRemoteForm.valueChanges.pipe(
+      tap((value) => this.valueChange.emit(value))
     );
   }
 

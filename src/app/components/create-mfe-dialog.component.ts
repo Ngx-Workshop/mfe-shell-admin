@@ -9,6 +9,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MfeFormComponent } from './mfe-form.component';
+import { IMfeRemote } from '../services/mfe-remote.service';
 
 @Component({
   selector: 'ngx-create-mfe-dialog',
@@ -24,13 +25,17 @@ import { MfeFormComponent } from './mfe-form.component';
   template: `
     <h2 mat-dialog-title>Create MFE Remote catalog entry?</h2>
     <mat-dialog-content>
-      <ngx-mfe-form [value]="mfeRemote"></ngx-mfe-form>
+      <ngx-mfe-form
+        (formStatus)="disableCrateButton = $event !== 'VALID'"
+        (valueChange)="mfeRemote = $event"
+      ></ngx-mfe-form>
     </mat-dialog-content>
     <mat-dialog-actions>
       <button matButton (click)="dialogRef.close()">Cancel</button>
       <button
         matButton
-        (click)="createRemote()"
+        (click)="dialogRef.close(this.mfeRemote)"
+        [disabled]="disableCrateButton"
       >
         Create
       </button>
@@ -50,15 +55,6 @@ import { MfeFormComponent } from './mfe-form.component';
 })
 export class CreateMFEDialog {
   dialogRef = inject(MatDialogRef<CreateMFEDialog>);
-
-  mfeRemote = {
-    name: '',
-    description: '',
-    remoteEntryUrl: '',
-  }
-
-  createRemote() {
-    console.log('Creating MFE Remote:', this.mfeRemote);
-    // this.dialogRef.close(this.mfeRemote);
-  }
+  disableCrateButton = true;
+  mfeRemote: Partial<IMfeRemote> = {}
 }
