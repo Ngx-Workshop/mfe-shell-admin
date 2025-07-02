@@ -1,19 +1,30 @@
 import { Component, inject, input, output } from '@angular/core';
 import { IMfeRemote } from '../services/mfe-remote.service';
 import { MatCardModule } from '@angular/material/card';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { MfeFormComponent } from './mfe-form.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { lastValueFrom, tap } from 'rxjs';
+import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
 
 @Component({
   selector: 'ngx-mfe-remote',
-  imports: [MatCardModule, MatButton, DatePipe, MfeFormComponent],
+  imports: [
+    MatCardModule,
+    MatButton,
+    MatIconButton,
+    MatIcon,
+    DatePipe,
+    MfeFormComponent,
+  ],
   template: `
     @if (initialValue(); as mfe) {
     <mat-card appearance="filled">
       <mat-card-header>
-        <h3>Version {{ mfe.version }}</h3>
+        <h5>Version {{ mfe.version }}</h5>
         <div class="flex-spacer"></div>
         <h5>Last Updated: {{ mfe.lastUpdated | date }}</h5>
       </mat-card-header>
@@ -25,6 +36,10 @@ import { MfeFormComponent } from './mfe-form.component';
         ></ngx-mfe-form>
       </mat-card-content>
       <mat-card-actions>
+        <button matIconButton (click)="deleteRemote()">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <div class="flex-spacer"></div>
         <button
           matButton
           (click)="updateRemote()"
@@ -46,15 +61,20 @@ import { MfeFormComponent } from './mfe-form.component';
           display: flex;
           flex-direction: column;
         }
-        mat-card-header {
+        mat-card-header,
+        mat-card-actions {
           display: flex;
           flex-direction: row;
+          mat-icon {
+            color: var(--mat-sys-error);
+          }
         }
       }
     `,
   ],
 })
 export class MfeRemoteComponent {
+  dialog = inject(MatDialog);
   formBuilder = inject(FormBuilder);
   initialValue = input.required<IMfeRemote>();
 
@@ -62,6 +82,7 @@ export class MfeRemoteComponent {
 
   update = output<IMfeRemote>();
   archive = output<IMfeRemote>();
+  delete = output<IMfeRemote>();
 
   disableUpdateButton = false;
 
@@ -76,5 +97,14 @@ export class MfeRemoteComponent {
 
   archiveRemote() {
     this.archive.emit(this.initialValue());
+  }
+
+  deleteRemote() {
+    lastValueFrom(
+      this.dialog
+        .open(ConfirmDeleteDialog, { data: this.initialValue() })
+        .afterClosed()
+        .pipe(tap((mfeRemote) => mfeRemote && this.delete.emit(mfeRemote)))
+    );
   }
 }

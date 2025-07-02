@@ -77,4 +77,16 @@ export class MfeRemoteService {
         })
       );
   }
+
+  deleteMfeRemote(mfeRemote: IMfeRemote) {
+    return this.httpClient
+      .delete<IMfeRemote>(`/api/mfe-remotes/${mfeRemote._id}`)
+      .pipe(
+        switchMap(() => this.fetchMfeRemotes()),
+        catchError((error) => {
+          console.warn('Error deleting MFE remote:', error);
+          return of([]);
+        })
+      );
+  }
 }

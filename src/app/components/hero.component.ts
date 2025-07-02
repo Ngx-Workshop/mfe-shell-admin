@@ -1,8 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import {
-  MatDialog
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { iif, lastValueFrom, of, switchMap, tap } from 'rxjs';
 import { CreateMFEDialog } from './create-mfe-dialog.component';
 import { MfeRemoteService } from '../services/mfe-remote.service';
@@ -89,15 +87,18 @@ export class HeroComponent {
 
   openDialog(): void {
     lastValueFrom(
-      this.dialog.open(CreateMFEDialog).afterClosed().pipe(
-        switchMap((mfeRemote) =>
-          iif(
-            () => !!mfeRemote,
-            this.mfeRemoteService.createMfeRemote(mfeRemote),
-            of(void 0)
+      this.dialog
+        .open(CreateMFEDialog)
+        .afterClosed()
+        .pipe(
+          switchMap((mfeRemote) =>
+            iif(
+              () => !!mfeRemote,
+              this.mfeRemoteService.createMfeRemote(mfeRemote),
+              of(void 0)
+            )
           )
         )
-      )
     );
   }
 }

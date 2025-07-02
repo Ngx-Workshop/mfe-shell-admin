@@ -48,15 +48,15 @@ type ViewModel = {
         }
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea formControlName="description" matInput></textarea>
-      </mat-form-field>
-      <mat-form-field>
         <mat-label>Remote Entry URL</mat-label>
         <input formControlName="remoteEntryUrl" matInput />
         @if (vm.mfeRemoteForm.get('remoteEntryUrl')?.errors) {
         <mat-error>{{ vm.formErrorMessages['remoteEntryUrl'] }}</mat-error>
         }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea formControlName="description" matInput></textarea>
       </mat-form-field>
     </form>
     }

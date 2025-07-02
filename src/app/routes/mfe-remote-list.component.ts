@@ -15,6 +15,7 @@ import { AsyncPipe } from '@angular/common';
       [initialValue]="mfeRemote"
       (update)="updateMfeRemote($event)"
       (archive)="archiveMfeRemote($event)"
+      (delete)="deleteMfeRemote($event)"
     ></ngx-mfe-remote>
     }
   `,
@@ -45,5 +46,11 @@ export class MfeRemoteListComponent {
 
   archiveMfeRemote(remote: IMfeRemote) {
     lastValueFrom(this.mfeRemoteService.archiveMfeRemote(remote));
+  }
+
+  deleteMfeRemote(remote: IMfeRemote) {
+    console.log('deleteMfeRemote', remote);
+
+    lastValueFrom(this.mfeRemoteService.deleteMfeRemote(remote));
   }
 }
