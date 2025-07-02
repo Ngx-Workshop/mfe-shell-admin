@@ -12,7 +12,7 @@ import { AsyncPipe } from '@angular/common';
     <ngx-hero></ngx-hero>
     @for (mfeRemote of mfeRemotes | async; track $index) {
     <ngx-mfe-remote
-      [mfeRemote]="mfeRemote"
+      [initialValue]="mfeRemote"
       (update)="updateMfeRemote($event)"
       (archive)="archiveMfeRemote($event)"
     ></ngx-mfe-remote>

@@ -78,14 +78,14 @@ export class MfeFormComponent {
 
   valueChange = output<Partial<IMfeRemote>>();
   formStatus = output<FormControlStatus | null>();
-  initValue = input<Partial<IMfeRemote>>({
+  initialValue = input<Partial<IMfeRemote>>({
     name: '',
     description: '',
     remoteEntryUrl: '',
   });
-  initValue$ = toObservable(this.initValue);
+  initialValue$ = toObservable(this.initialValue);
 
-  viewModel$ = this.initValue$.pipe(
+  viewModel$ = this.initialValue$.pipe(
     map((value) => ({
       mfeRemoteForm: this.formBuilder.nonNullable.group({
         name: [value.name, Validators.required],

@@ -26,7 +26,7 @@ import { IMfeRemote } from '../services/mfe-remote.service';
     <h2 mat-dialog-title>Create MFE Remote catalog entry?</h2>
     <mat-dialog-content>
       <ngx-mfe-form
-        (formStatus)="disableCrateButton = $event !== 'VALID'"
+        (formStatus)="disableCreateButton = $event !== 'VALID'"
         (valueChange)="mfeRemote = $event"
       ></ngx-mfe-form>
     </mat-dialog-content>
@@ -35,7 +35,7 @@ import { IMfeRemote } from '../services/mfe-remote.service';
       <button
         matButton
         (click)="dialogRef.close(this.mfeRemote)"
-        [disabled]="disableCrateButton"
+        [disabled]="disableCreateButton"
       >
         Create
       </button>
@@ -55,6 +55,6 @@ import { IMfeRemote } from '../services/mfe-remote.service';
 })
 export class CreateMFEDialog {
   dialogRef = inject(MatDialogRef<CreateMFEDialog>);
-  disableCrateButton = true;
+  disableCreateButton = true;
   mfeRemote: Partial<IMfeRemote> = {}
 }

@@ -34,18 +34,22 @@ export class MfeRemoteService {
   }
 
   createMfeRemote(mfeRemote: IMfeRemote) {
-    return this.httpClient
-      .post<IMfeRemote>('/api/mfe-remotes', mfeRemote)
-      .pipe(
-        switchMap(() => this.fetchMfeRemotes()),
-        catchError((error) => {
-          console.warn('Error creating MFE remote:', error);
-          return of([]);
-        })
-      );
+    return this.httpClient.post<IMfeRemote>('/api/mfe-remotes', mfeRemote).pipe(
+      switchMap(() => this.fetchMfeRemotes()),
+      catchError((error) => {
+        console.warn('Error creating MFE remote:', error);
+        return of([]);
+      })
+    );
   }
 
-  updateMfeRemote({ _id, lastUpdated, __v, ...partialMfeRemote }: IMfeRemote) {
+  updateMfeRemote({
+    _id,
+    lastUpdated,
+    __v,
+    version,
+    ...partialMfeRemote
+  }: IMfeRemote) {
     return this.httpClient
       .patch<IMfeRemote>(`/api/mfe-remotes/${_id}`, partialMfeRemote)
       .pipe(
