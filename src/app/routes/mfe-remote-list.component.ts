@@ -35,10 +35,10 @@ import { MatCard } from '@angular/material/card';
           width: 100%;
           max-width: 800px;
           margin-bottom: 2em;
-          padding: 1em;
+          padding: 1.7em;
           display: flex;
           flex-direction: column;
-          gap: 1em;
+          gap: 1.7em;
         }
       }
     `,

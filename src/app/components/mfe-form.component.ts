@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, input, model, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
   ReactiveFormsModule,
@@ -11,15 +11,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {
-  of,
-  startWith,
-  withLatestFrom,
-  map,
-  mergeMap,
-  tap,
-  forkJoin,
-} from 'rxjs';
+import { startWith, map, mergeMap, tap, forkJoin } from 'rxjs';
 import { IMfeRemote } from '../services/mfe-remote.service';
 
 type ViewModel = {
@@ -47,13 +39,20 @@ type ViewModel = {
         <mat-error>{{ vm.formErrorMessages['name'] }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>Remote Entry URL</mat-label>
-        <input formControlName="remoteEntryUrl" matInput />
-        @if (vm.mfeRemoteForm.get('remoteEntryUrl')?.errors) {
-        <mat-error>{{ vm.formErrorMessages['remoteEntryUrl'] }}</mat-error>
+      <div class="remote-entry-url-group">
+        <mat-form-field>
+          <mat-label>Remote Entry URL</mat-label>
+          <input formControlName="remoteEntryUrl" matInput />
+          @if (vm.mfeRemoteForm.get('remoteEntryUrl')?.errors) {
+          <mat-error>{{ vm.formErrorMessages['remoteEntryUrl'] }}</mat-error>
+          }
+        </mat-form-field>
+        @if(initialValue().status === 'VALID') {
+        <button mat-flat-button [disabled]="true">Preview</button>
+        } @else {
+        <button mat-button [disabled]="true">Verify</button>
         }
-      </mat-form-field>
+      </div>
       <mat-form-field>
         <mat-label>Description</mat-label>
         <textarea formControlName="description" matInput></textarea>
@@ -68,6 +67,15 @@ type ViewModel = {
           display: flex;
           flex-direction: column;
           gap: 0.5em;
+          .remote-entry-url-group {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5em;
+            align-items: baseline;
+            mat-form-field {
+              flex: 1;
+            }
+          }
         }
       }
     `,

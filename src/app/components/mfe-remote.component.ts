@@ -11,22 +11,64 @@ import { lastValueFrom, tap } from 'rxjs';
 import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
 
 @Component({
+  selector: 'ngx-mfe-remote-info-group',
+  imports: [DatePipe],
+  template: `
+    <div class="mfe-remote-info-group">
+      <p>
+        <span class="label">Last Updated:</span>
+        <span class="value">{{ mfe().lastUpdated | date }}</span>
+      </p>
+      <p>
+        <span class="label">Version:</span>
+        <span class="value">{{ mfe().version }}</span>
+      </p>
+    </div>
+  `,
+  styles: [
+    `
+      :host {
+        p {
+          margin: 0.2em 0;
+          display: flex;
+          .label {
+            font-weight: 600;
+            text-align: right;
+            min-width: 120px;
+            margin-right: 8px;
+          }
+          .value {
+            text-align: left;
+            flex: 1;
+          }
+        }
+      }
+    `,
+  ],
+})
+export class MfeRemoteInfoGroup {
+  mfe = input.required<IMfeRemote>();
+}
+
+@Component({
   selector: 'ngx-mfe-remote',
   imports: [
     MatCardModule,
     MatButton,
     MatIconButton,
     MatIcon,
-    DatePipe,
     MfeFormComponent,
+    MfeRemoteInfoGroup,
   ],
   template: `
     @if (initialValue(); as mfe) {
     <mat-card appearance="filled">
       <mat-card-header>
-        <h5>Version {{ mfe.version }}</h5>
+        <button mat-icon-button><mat-icon>info</mat-icon></button>
         <div class="flex-spacer"></div>
-        <h5>Last Updated: {{ mfe.lastUpdated | date }}</h5>
+        <ngx-mfe-remote-info-group
+          [mfe]="initialValue()"
+        ></ngx-mfe-remote-info-group>
       </mat-card-header>
       <mat-card-content>
         <ngx-mfe-form
@@ -37,7 +79,7 @@ import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
       </mat-card-content>
       <mat-card-actions>
         <button matIconButton (click)="deleteRemote()">
-          <mat-icon>delete</mat-icon>
+          <mat-icon class="delete">delete</mat-icon>
         </button>
         <div class="flex-spacer"></div>
         <button
@@ -65,7 +107,8 @@ import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
         mat-card-actions {
           display: flex;
           flex-direction: row;
-          mat-icon {
+          margin-bottom: 1em;
+          .delete {
             color: var(--mat-sys-error);
           }
         }
