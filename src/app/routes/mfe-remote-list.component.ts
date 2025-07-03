@@ -23,11 +23,13 @@ import { AsyncPipe } from '@angular/common';
     `
       :host {
         margin-top: 56px;
+        padding-bottom: 56px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         gap: 3em;
+        
         ngx-mfe-remote {
           width: 100%;
           max-width: 800px;
@@ -49,8 +51,6 @@ export class MfeRemoteListComponent {
   }
 
   deleteMfeRemote(remote: IMfeRemote) {
-    console.log('deleteMfeRemote', remote);
-
     lastValueFrom(this.mfeRemoteService.deleteMfeRemote(remote));
   }
 }

@@ -32,6 +32,4 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
     `,
   ],
 })
-export class App {
-  protected title = 'ngx-mfe-orchestrator-ui';
-}
+export class App {}
