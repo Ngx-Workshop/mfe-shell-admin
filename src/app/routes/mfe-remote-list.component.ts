@@ -11,7 +11,6 @@ import { MatDialog } from '@angular/material/dialog';
   selector: 'ngx-mfe-remotes',
   imports: [HeroComponent, MfeRemoteComponent, AsyncPipe, MatCard],
   template: `
-  test
     <ngx-hero></ngx-hero>
     <mat-card appearance="outlined">
       @for (mfeRemote of mfeRemotes | async; track $index) {
