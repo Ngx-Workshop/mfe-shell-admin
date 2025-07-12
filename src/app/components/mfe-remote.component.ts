@@ -24,6 +24,7 @@ import { lastValueFrom, of, tap } from 'rxjs';
 import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
+import { loadRemoteModule } from '@angular-architects/module-federation';
 
 @Component({
   selector: 'ngx-mfe-remote',
@@ -43,7 +44,7 @@ import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
         <button
           mat-icon-button
           matTooltip="Preview the MFE"
-          (click)="previewMfeRemote(mfeRemote)"
+          (click)="previewMfeRemote(mfe.remoteEntryUrl)"
         >
           <mat-icon>play_arrow</mat-icon>
         </button>
@@ -129,7 +130,7 @@ export class MfeRemoteComponent {
     );
   }
 
-  previewMfeRemote(mfeRemote: Partial<IMfeRemote>) {
+  previewMfeRemote(mfeRemote: string) {
     this.dialog.open(MfePreviewComponent, { data: mfeRemote });
   }
 }
@@ -140,6 +141,7 @@ export class MfeRemoteComponent {
   template: `
     <h1 mat-dialog-title>Preview MFE</h1>
     <mat-dialog-content>
+      {{ mfeRemoteUrl}}
       <ng-container #mfeHost></ng-container>
     </mat-dialog-content>
     <mat-dialog-actions>
@@ -154,17 +156,17 @@ export class MfePreviewComponent {
   dialogRef = inject(MatDialogRef<ConfirmDeleteDialog>);
   mfeRemoteUrl = inject<string>(MAT_DIALOG_DATA);
 
-  // async ngOnInit() {
-  //   try {
-  //     const remoteComponent = await loadRemoteModule({
-  //       type: 'module',
-  //       remoteEntry: this.mfeRemoteUrl,
-  //       exposedModule: './Component',
-  //     });
+  async ngOnInit() {
+    try {
+      const remoteComponent = await loadRemoteModule({
+        type: 'module',
+        remoteEntry: this.mfeRemoteUrl,
+        exposedModule: './Component',
+      });
 
-  //     this.mfeHost.createComponent(remoteComponent);
-  //   } catch (error) {
-  //     console.error('[MFE LOAD ERROR]', error);
-  //   }
-  // }
+      this.mfeHost.createComponent(remoteComponent);
+    } catch (error) {
+      console.error('[MFE LOAD ERROR]', error);
+    }
+  }
 }
