@@ -11,8 +11,8 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { startWith, map, mergeMap, tap, forkJoin } from 'rxjs';
-import { IMfeRemote } from '../services/mfe-remote.service';
+import { startWith, map, mergeMap, tap, forkJoin, lastValueFrom } from 'rxjs';
+import { IMfeRemote, MfeRemoteService } from '../services/mfe-remote.service';
 
 type ViewModel = {
   mfeRemoteForm: FormGroup;
@@ -47,11 +47,7 @@ type ViewModel = {
           <mat-error>{{ vm.formErrorMessages['remoteEntryUrl'] }}</mat-error>
           }
         </mat-form-field>
-        @if(initialValue().status === 'VALID') {
-        <button mat-flat-button [disabled]="true">Preview</button>
-        } @else {
-        <button mat-button [disabled]="true">Verify</button>
-        }
+        <button mat-button (click)="vm.verifyMfeUrl()">Verify</button>
       </div>
       <mat-form-field>
         <mat-label>Description</mat-label>
@@ -83,6 +79,7 @@ type ViewModel = {
 })
 export class MfeFormComponent {
   formBuilder = inject(FormBuilder);
+  mfeRemoteService = inject(MfeRemoteService);
 
   valueChange = output<Partial<IMfeRemote>>();
   formStatus = output<FormControlStatus | null>();
@@ -98,10 +95,7 @@ export class MfeFormComponent {
       mfeRemoteForm: this.formBuilder.nonNullable.group({
         name: [value.name, Validators.required],
         description: [value.description],
-        remoteEntryUrl: [
-          value.remoteEntryUrl,
-          [Validators.required, Validators.pattern('https?://.+')],
-        ],
+        remoteEntryUrl: [value.remoteEntryUrl, [Validators.required]],
       }),
       errorMessages: {
         required: 'Required',
@@ -118,7 +112,11 @@ export class MfeFormComponent {
         this.watchFormValueChanges(viewModel),
       ]).pipe(
         startWith(null),
-        map(() => viewModel)
+        map(() => ({
+          ...viewModel,
+          verifyMfeUrl: () =>
+            this.verifyMfeUrl(viewModel.mfeRemoteForm.value.remoteEntryUrl),
+        }))
       )
     )
   );
@@ -149,5 +147,9 @@ export class MfeFormComponent {
         formErrorMessages[element] = errorMessages[error];
       }
     });
+  }
+
+  verifyMfeUrl(url: string) {
+    lastValueFrom(this.mfeRemoteService.verifyMfeUrl(url));
   }
 }

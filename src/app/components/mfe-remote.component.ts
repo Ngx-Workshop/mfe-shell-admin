@@ -1,54 +1,29 @@
-import { Component, inject, input, output } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { IMfeRemote } from '../services/mfe-remote.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { MfeFormComponent } from './mfe-form.component';
 import { MatIcon } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { lastValueFrom, tap } from 'rxjs';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { lastValueFrom, of, tap } from 'rxjs';
 import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
-
-@Component({
-  selector: 'ngx-mfe-remote-info-group',
-  imports: [DatePipe],
-  template: `
-    <div class="mfe-remote-info-group">
-      <p>
-        <span class="label">Last Updated:</span>
-        <span class="value">{{ mfe().lastUpdated | date }}</span>
-      </p>
-      <p>
-        <span class="label">Version:</span>
-        <span class="value">{{ mfe().version }}</span>
-      </p>
-    </div>
-  `,
-  styles: [
-    `
-      :host {
-        p {
-          margin: 0.2em 0;
-          display: flex;
-          .label {
-            font-weight: 600;
-            text-align: right;
-            min-width: 120px;
-            margin-right: 8px;
-          }
-          .value {
-            text-align: left;
-            flex: 1;
-          }
-        }
-      }
-    `,
-  ],
-})
-export class MfeRemoteInfoGroup {
-  mfe = input.required<IMfeRemote>();
-}
+import { MatTooltip } from '@angular/material/tooltip';
+import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
 
 @Component({
   selector: 'ngx-mfe-remote',
@@ -59,12 +34,19 @@ export class MfeRemoteInfoGroup {
     MatIcon,
     MfeFormComponent,
     MfeRemoteInfoGroup,
+    MatTooltip,
   ],
   template: `
     @if (initialValue(); as mfe) {
     <mat-card appearance="filled">
       <mat-card-header>
-        <button mat-icon-button><mat-icon>info</mat-icon></button>
+        <button
+          mat-icon-button
+          matTooltip="Preview the MFE"
+          (click)="previewMfeRemote(mfeRemote)"
+        >
+          <mat-icon>play_arrow</mat-icon>
+        </button>
         <div class="flex-spacer"></div>
         <ngx-mfe-remote-info-group
           [mfe]="initialValue()"
@@ -89,7 +71,7 @@ export class MfeRemoteInfoGroup {
         >
           Update
         </button>
-        <button matButton (click)="archiveRemote()">
+        <button matButton (click)="archive.emit(mfe)">
           {{ mfe.archived ? 'Archived' : 'Archive' }}
         </button>
       </mat-card-actions>
@@ -138,10 +120,6 @@ export class MfeRemoteComponent {
       : void 0;
   }
 
-  archiveRemote() {
-    this.archive.emit(this.initialValue());
-  }
-
   deleteRemote() {
     lastValueFrom(
       this.dialog
@@ -150,4 +128,43 @@ export class MfeRemoteComponent {
         .pipe(tap((mfeRemote) => mfeRemote && this.delete.emit(mfeRemote)))
     );
   }
+
+  previewMfeRemote(mfeRemote: Partial<IMfeRemote>) {
+    this.dialog.open(MfePreviewComponent, { data: mfeRemote });
+  }
+}
+
+@Component({
+  selector: 'ngx-mfe-preview',
+  imports: [MatButton, MatDialogTitle, MatDialogContent, MatDialogActions],
+  template: `
+    <h1 mat-dialog-title>Preview MFE</h1>
+    <mat-dialog-content>
+      <ng-container #mfeHost></ng-container>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button matButton (click)="dialogRef.close()">Cancel</button>
+    </mat-dialog-actions>
+  `,
+})
+export class MfePreviewComponent {
+  @ViewChild('mfeHost', { read: ViewContainerRef, static: true })
+  private mfeHost!: ViewContainerRef;
+
+  dialogRef = inject(MatDialogRef<ConfirmDeleteDialog>);
+  mfeRemoteUrl = inject<string>(MAT_DIALOG_DATA);
+
+  // async ngOnInit() {
+  //   try {
+  //     const remoteComponent = await loadRemoteModule({
+  //       type: 'module',
+  //       remoteEntry: this.mfeRemoteUrl,
+  //       exposedModule: './Component',
+  //     });
+
+  //     this.mfeHost.createComponent(remoteComponent);
+  //   } catch (error) {
+  //     console.error('[MFE LOAD ERROR]', error);
+  //   }
+  // }
 }

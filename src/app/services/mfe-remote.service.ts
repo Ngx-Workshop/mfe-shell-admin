@@ -89,4 +89,20 @@ export class MfeRemoteService {
         })
       );
   }
+
+  verifyMfeUrl(remoteEntryUrl: string) {
+    return this.httpClient
+      .get<{ status: string }>(remoteEntryUrl)
+      .pipe(
+        tap((response) => {
+          if (response.status !== 'ok') {
+            throw new Error('Remote entry URL is not valid');
+          }
+        }),
+        catchError((error) => {
+          console.warn('Error verifying MFE URL:', error);
+          return of({ status: 'error' });
+        })
+      );
+  }
 }

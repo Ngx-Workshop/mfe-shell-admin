@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { IMfeRemote, MfeRemoteService } from '../services/mfe-remote.service';
 import { AsyncPipe } from '@angular/common';
 import { MatCard } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'ngx-mfe-remotes',
@@ -45,8 +46,10 @@ import { MatCard } from '@angular/material/card';
   ],
 })
 export class MfeRemoteListComponent {
+  dialog = inject(MatDialog);
   mfeRemoteService = inject(MfeRemoteService);
   mfeRemotes = this.mfeRemoteService.mfeRemotes$;
+
 
   updateMfeRemote(remote: IMfeRemote) {
     lastValueFrom(this.mfeRemoteService.updateMfeRemote(remote));
