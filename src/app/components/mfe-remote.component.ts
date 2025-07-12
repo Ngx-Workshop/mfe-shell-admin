@@ -163,8 +163,7 @@ export class MfePreviewComponent {
         remoteEntry: this.mfeRemoteUrl,
         exposedModule: './Component',
       });
-
-      this.mfeHost.createComponent(remoteComponent);
+      this.mfeHost.createComponent(remoteComponent.default);
     } catch (error) {
       console.error('[MFE LOAD ERROR]', error);
     }
