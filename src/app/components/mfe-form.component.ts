@@ -2,17 +2,21 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject, input, output } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
-  ReactiveFormsModule,
   FormBuilder,
-  Validators,
-  FormGroup,
   FormControlStatus,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { startWith, map, mergeMap, tap, forkJoin, lastValueFrom } from 'rxjs';
-import { IMfeRemote, MfeRemoteService } from '../services/mfe-remote.service';
+import { forkJoin, lastValueFrom, map, mergeMap, startWith, tap } from 'rxjs';
+import {
+  IMfeRemote,
+  MfeRemoteService,
+  MfeRemoteType,
+  StructuralOverrideMode,
+} from '../services/mfe-remote.service';
+import { MfeBasicFieldsComponent } from './mfe-basic-fields-form.component';
+import { StructuralOverridesComponent } from './mfe-structural-overrides-form.component';
 
 type ViewModel = {
   mfeRemoteForm: FormGroup;
@@ -25,34 +29,26 @@ type ViewModel = {
   imports: [
     AsyncPipe,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
+    MfeBasicFieldsComponent,
+    StructuralOverridesComponent,
   ],
   template: `
     @if (viewModel$ | async; as vm) {
     <form [formGroup]="vm.mfeRemoteForm">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input formControlName="name" matInput />
-        @if (vm.mfeRemoteForm.get('name')?.errors) {
-        <mat-error>{{ vm.formErrorMessages['name'] }}</mat-error>
-        }
-      </mat-form-field>
-      <div class="remote-entry-url-group">
-        <mat-form-field>
-          <mat-label>Remote Entry URL</mat-label>
-          <input formControlName="remoteEntryUrl" matInput />
-          @if (vm.mfeRemoteForm.get('remoteEntryUrl')?.errors) {
-          <mat-error>{{ vm.formErrorMessages['remoteEntryUrl'] }}</mat-error>
-          }
-        </mat-form-field>
-        <button mat-button (click)="vm.verifyMfeUrl()">Verify</button>
-      </div>
-      <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea formControlName="description" matInput></textarea>
-      </mat-form-field>
+      <ngx-mfe-basic-fields
+        [form]="vm.mfeRemoteForm"
+        [errorMessages]="vm.formErrorMessages"
+        [mfeTypes]="mfeTypes"
+        (verifyUrlClick)="verifyMfeUrl($event)"
+      ></ngx-mfe-basic-fields>
+
+      @if (vm.mfeRemoteForm.get('type')?.value === 'user-journey') {
+      <ngx-structural-overrides
+        [structuralOverridesForm]="
+          $any(vm.mfeRemoteForm.get('structuralOverrides'))
+        "
+      ></ngx-structural-overrides>
+      }
     </form>
     }
   `,
@@ -63,15 +59,6 @@ type ViewModel = {
           display: flex;
           flex-direction: column;
           gap: 0.5em;
-          .remote-entry-url-group {
-            display: flex;
-            flex-direction: row;
-            gap: 0.5em;
-            align-items: baseline;
-            mat-form-field {
-              flex: 1;
-            }
-          }
         }
       }
     `,
@@ -87,36 +74,82 @@ export class MfeFormComponent {
     name: '',
     description: '',
     remoteEntryUrl: '',
+    type: MfeRemoteType.USER_JOURNEY,
+    structuralOverrides: {
+      header: StructuralOverrideMode.DISABLED,
+      nav: StructuralOverrideMode.DISABLED,
+      footer: StructuralOverrideMode.DISABLED,
+    },
   });
   initialValue$ = toObservable(this.initialValue);
 
+  mfeTypes = Object.values(MfeRemoteType);
+
+  private createFormGroup(baseFormGroup: any, value: Partial<IMfeRemote>): any {
+    return value.type === MfeRemoteType.USER_JOURNEY
+      ? {
+          ...baseFormGroup,
+          structuralOverrides: this.createStructuralOverridesFormGroup(
+            value.structuralOverrides
+          ),
+        }
+      : baseFormGroup;
+  }
+
+  private createStructuralOverridesFormGroup(
+    structuralOverrides?: Partial<{
+      header: StructuralOverrideMode;
+      nav: StructuralOverrideMode;
+      footer: StructuralOverrideMode;
+    }>
+  ): FormGroup {
+    return this.formBuilder.nonNullable.group({
+      header: [
+        structuralOverrides?.header || StructuralOverrideMode.DISABLED,
+        Validators.required,
+      ],
+      nav: [
+        structuralOverrides?.nav || StructuralOverrideMode.DISABLED,
+        Validators.required,
+      ],
+      footer: [
+        structuralOverrides?.footer || StructuralOverrideMode.DISABLED,
+        Validators.required,
+      ],
+    });
+  }
+
   viewModel$ = this.initialValue$.pipe(
-    map((value) => ({
-      mfeRemoteForm: this.formBuilder.nonNullable.group({
+    map((value) => {
+      const baseFormGroup = {
         name: [value.name, Validators.required],
         description: [value.description],
         remoteEntryUrl: [value.remoteEntryUrl, [Validators.required]],
-      }),
-      errorMessages: {
-        required: 'Required',
-        pattern: 'Must be a valid URL',
-      },
-      formErrorMessages: {
-        name: '',
-        remoteEntryUrl: '',
-      },
-    })),
+        type: [value.type, [Validators.required]],
+      };
+
+      const formGroup = this.createFormGroup(baseFormGroup, value);
+
+      return {
+        mfeRemoteForm: this.formBuilder.nonNullable.group(formGroup),
+        errorMessages: {
+          required: 'Required',
+          pattern: 'Must be a valid URL',
+        },
+        formErrorMessages: {
+          name: '',
+          remoteEntryUrl: '',
+        },
+      };
+    }),
     mergeMap((viewModel: ViewModel) =>
       forkJoin([
         this.watchStatusChanges(viewModel),
         this.watchFormValueChanges(viewModel),
+        this.watchTypeChanges(viewModel),
       ]).pipe(
         startWith(null),
-        map(() => ({
-          ...viewModel,
-          verifyMfeUrl: () =>
-            this.verifyMfeUrl(viewModel.mfeRemoteForm.value.remoteEntryUrl),
-        }))
+        map(() => viewModel)
       )
     )
   );
@@ -130,11 +163,39 @@ export class MfeFormComponent {
 
   watchFormValueChanges(viewModel: ViewModel) {
     return viewModel.mfeRemoteForm.valueChanges.pipe(
-      tap((value) => this.valueChange.emit(value))
+      tap((value) => {
+        // If type is STRUCTURAL, remove structuralOverrides from the emitted value
+        if (value.type === MfeRemoteType.STRUCTURAL) {
+          const { structuralOverrides, ...valueWithoutOverrides } = value;
+          this.valueChange.emit(valueWithoutOverrides);
+        } else {
+          this.valueChange.emit(value);
+        }
+      })
     );
   }
 
-  // ! Quick and Drity way to set error messages
+  watchTypeChanges(viewModel: ViewModel) {
+    return viewModel.mfeRemoteForm.get('type')!.valueChanges.pipe(
+      tap((type) => {
+        if (type === MfeRemoteType.USER_JOURNEY) {
+          // Add structuralOverrides form group if it doesn't exist
+          if (!viewModel.mfeRemoteForm.get('structuralOverrides')) {
+            viewModel.mfeRemoteForm.addControl(
+              'structuralOverrides',
+              this.createStructuralOverridesFormGroup()
+            );
+          }
+        } else if (type === MfeRemoteType.STRUCTURAL) {
+          // Remove structuralOverrides form group
+          if (viewModel.mfeRemoteForm.get('structuralOverrides')) {
+            viewModel.mfeRemoteForm.removeControl('structuralOverrides');
+          }
+        }
+      })
+    );
+  }
+
   setErrorsMessages({
     mfeRemoteForm,
     formErrorMessages,

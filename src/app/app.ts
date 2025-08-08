@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavBarComponent } from './components/nav-bar.component';
 import { RouterOutlet } from '@angular/router';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MfeRemoteService } from './services/mfe-remote.service';
 
 @Component({
   selector: 'ngx-root',
@@ -32,4 +33,11 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
     `,
   ],
 })
-export class App {}
+export class App {
+
+  constructor(private mfeRemoteService: MfeRemoteService) {
+    // Initialize the service to fetch MFE remotes on app start
+    // this.mfeRemoteService.testAuthEndpoint().subscribe();
+  }
+    
+}
