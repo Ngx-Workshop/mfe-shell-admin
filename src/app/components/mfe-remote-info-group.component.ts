@@ -1,18 +1,12 @@
+import { DatePipe } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { IMfeRemote } from '../services/mfe-remote.service';
-import { MatIconButton } from '@angular/material/button';
-import { DatePipe } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'ngx-mfe-remote-info-group',
-  imports: [DatePipe, MatIconButton, MatIcon, MatTooltip],
+  imports: [DatePipe],
   template: `
     <div class="mfe-remote-info-group">
-      <button mat-icon-button matTooltip="Hello I'm some info">
-        <mat-icon>info</mat-icon>
-      </button>
       <p>
         <span class="label">Last Updated:</span>
         <span class="value">{{ mfe().lastUpdated | date }}</span>

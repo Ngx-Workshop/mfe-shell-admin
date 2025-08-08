@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 
 html,
 body {
@@ -7,7 +7,7 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 body.light-mode {
@@ -115,7 +115,14 @@ body {
   }
 }
 
+:root {
+  @include mat.dialog-overrides(
+    (
+      container-max-width: 662px,
+    )
+  );
+}
+
 .flex-spacer {
   flex-grow: 1;
 }
-

@@ -14,7 +14,7 @@ import {
   MfeRemoteService,
   MfeRemoteType,
   StructuralOverrideMode,
-} from '../services/mfe-remote.service';
+} from '../../services/mfe-remote.service';
 import { MfeBasicFieldsComponent } from './mfe-basic-fields-form.component';
 import { StructuralOverridesComponent } from './mfe-structural-overrides-form.component';
 

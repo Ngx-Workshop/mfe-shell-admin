@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { iif, lastValueFrom, of, switchMap, tap } from 'rxjs';
-import { CreateMFEDialog } from './create-mfe-dialog.component';
+import { iif, lastValueFrom, of, switchMap } from 'rxjs';
 import { MfeRemoteService } from '../services/mfe-remote.service';
+import { CreateMFEDialog } from './create-mfe-dialog.component';
 
 @Component({
   selector: 'ngx-hero',
@@ -25,6 +25,8 @@ import { MfeRemoteService } from '../services/mfe-remote.service';
     `
       :host {
         width: 100%;
+
+        // width: 632px;
         .header-background {
           overflow: hidden;
           position: relative;

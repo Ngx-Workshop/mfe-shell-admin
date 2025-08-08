@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MfeRemoteType } from '../services/mfe-remote.service';
+import { MfeRemoteType } from '../../services/mfe-remote.service';
 
 @Component({
   selector: 'ngx-mfe-basic-fields',
@@ -29,9 +29,7 @@ import { MfeRemoteType } from '../services/mfe-remote.service';
           <mat-label>Remote Entry URL</mat-label>
           <input formControlName="remoteEntryUrl" matInput />
           @if (form().get('remoteEntryUrl')?.errors) {
-          <mat-error>{{
-            errorMessages()['remoteEntryUrl']
-          }}</mat-error>
+          <mat-error>{{ errorMessages()['remoteEntryUrl'] }}</mat-error>
           }
         </mat-form-field>
         <button mat-button (click)="verifyUrl()">Verify</button>

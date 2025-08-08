@@ -1,3 +1,4 @@
+import { loadRemoteModule } from '@angular-architects/module-federation';
 import {
   Component,
   inject,
@@ -6,12 +7,9 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { IMfeRemote } from '../services/mfe-remote.service';
-import { MatCardModule } from '@angular/material/card';
-import { MatButton, MatIconButton } from '@angular/material/button';
 import { FormBuilder } from '@angular/forms';
-import { MfeFormComponent } from './mfe-form.component';
-import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -20,11 +18,13 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { lastValueFrom, of, tap } from 'rxjs';
-import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
+import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
+import { lastValueFrom, tap } from 'rxjs';
+import { IMfeRemote } from '../services/mfe-remote.service';
+import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
+import { MfeFormComponent } from './mfe-form/mfe-form.component';
 import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
-import { loadRemoteModule } from '@angular-architects/module-federation';
 
 @Component({
   selector: 'ngx-mfe-remote',
@@ -41,6 +41,9 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
     @if (initialValue(); as mfe) {
     <mat-card appearance="filled">
       <mat-card-header>
+        <button mat-icon-button matTooltip="Hello I'm some info">
+          <mat-icon>info</mat-icon>
+        </button>
         <button
           mat-icon-button
           matTooltip="Preview the MFE"
@@ -64,6 +67,9 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
         <button matIconButton (click)="deleteRemote()">
           <mat-icon class="delete">delete</mat-icon>
         </button>
+        <button matButton (click)="archive.emit(mfe)">
+          {{ mfe.archived ? 'Archived' : 'Archive' }}
+        </button>
         <div class="flex-spacer"></div>
         <button
           matButton
@@ -71,9 +77,6 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
           [disabled]="disableUpdateButton"
         >
           Update
-        </button>
-        <button matButton (click)="archive.emit(mfe)">
-          {{ mfe.archived ? 'Archived' : 'Archive' }}
         </button>
       </mat-card-actions>
     </mat-card>
@@ -141,7 +144,7 @@ export class MfeRemoteComponent {
   template: `
     <h1 mat-dialog-title>Preview MFE</h1>
     <mat-dialog-content>
-      {{ mfeRemoteUrl}}
+      {{ mfeRemoteUrl }}
       <ng-container #mfeHost></ng-container>
     </mat-dialog-content>
     <mat-dialog-actions>
