@@ -1,59 +1,40 @@
+import { UpperCasePipe } from '@angular/common';
 import { Component, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 import { StructuralSubType } from '../../services/mfe-remote.service';
 
 @Component({
   selector: 'ngx-structural-subtypes',
   imports: [
     ReactiveFormsModule,
-    MatRadioGroup,
-    MatRadioButton,
+    MatSelectModule,
     MatExpansionModule,
+    UpperCasePipe,
   ],
   template: `
-    <div class="subtypes-container">
-      <div class="subtype-section">
-        <label>Sub Type:</label>
-        <mat-radio-group [formControl]="structuralSubTypeControl()">
-          @for (mode of structuralSubTypes; track mode.value) {
-          <mat-radio-button [value]="mode.value">{{
-            mode.label
-          }}</mat-radio-button>
-          }
-        </mat-radio-group>
-      </div>
-    </div>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select [formControl]="structuralSubTypeControl()">
+        @for (type of structuralSubType; track type) {
+        <mat-option [value]="type">{{ type | uppercase }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
   `,
   styles: [
     `
-      .subtypes-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        .subtype-section {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          label {
-            font-weight: 500;
-            font-size: 0.9em;
-          }
-          mat-radio-group {
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: space-between;
-          }
-        }
+      :host {
+        display: contents;
       }
     `,
   ],
 })
 export class StructuralSubTypesComponent {
   structuralSubTypeControl = input.required<FormControl>();
+
+  structuralSubType = Object.values(StructuralSubType);
 
   readonly panelOpenState = signal(false);
 

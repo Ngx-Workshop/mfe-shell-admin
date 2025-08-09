@@ -45,7 +45,6 @@ type ViewModel = {
       <ngx-mfe-basic-fields
         [form]="vm.mfeRemoteForm"
         [errorMessages]="vm.formErrorMessages"
-        [mfeTypes]="mfeTypes"
         (verifyUrlClick)="verifyMfeUrl($event)"
       ></ngx-mfe-basic-fields>
 
@@ -96,8 +95,6 @@ export class MfeFormComponent {
     },
   });
   initialValue$ = toObservable(this.initialValue);
-
-  mfeTypes = Object.values(MfeRemoteType);
 
   private createFormGroup(baseFormGroup: any, value: Partial<IMfeRemote>): any {
     if (value.type === MfeRemoteType.USER_JOURNEY) {

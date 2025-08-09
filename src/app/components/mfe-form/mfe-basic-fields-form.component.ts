@@ -24,6 +24,10 @@ import { MfeRemoteType } from '../../services/mfe-remote.service';
         <mat-error>{{ errorMessages()['name'] }}</mat-error>
         }
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea formControlName="description" matInput></textarea>
+      </mat-form-field>
       <div class="remote-entry-url-group">
         <mat-form-field>
           <mat-label>Remote Entry URL</mat-label>
@@ -37,17 +41,10 @@ import { MfeRemoteType } from '../../services/mfe-remote.service';
       <mat-form-field>
         <mat-label>Type</mat-label>
         <mat-select formControlName="type">
-          @for (type of mfeTypes(); track type) {
+          @for (type of mfeTypes; track type) {
           <mat-option [value]="type">{{ type }}</mat-option>
           }
         </mat-select>
-        @if (form().get('type')?.errors) {
-        <mat-error>{{ errorMessages()['type'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea formControlName="description" matInput></textarea>
       </mat-form-field>
     </div>
   `,
@@ -55,10 +52,8 @@ import { MfeRemoteType } from '../../services/mfe-remote.service';
     `
       :host {
         display: contents;
-
         > div {
           display: contents;
-
           .remote-entry-url-group {
             display: flex;
             flex-direction: row;
@@ -76,7 +71,7 @@ import { MfeRemoteType } from '../../services/mfe-remote.service';
 export class MfeBasicFieldsComponent {
   form = input.required<FormGroup>();
   errorMessages = input.required<{ [key: string]: string }>();
-  mfeTypes = input.required<MfeRemoteType[]>();
+  mfeTypes = Object.values(MfeRemoteType);
   verifyUrlClick = output<string>();
 
   verifyUrl() {
