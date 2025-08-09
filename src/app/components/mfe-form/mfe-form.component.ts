@@ -3,20 +3,25 @@ import { Component, inject, input, output } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
+  FormControl,
   FormControlStatus,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { forkJoin, lastValueFrom, map, mergeMap, startWith, tap } from 'rxjs';
 import {
   IMfeRemote,
   MfeRemoteService,
   MfeRemoteType,
+  StructuralNavOverrideMode,
   StructuralOverrideMode,
+  StructuralSubType,
 } from '../../services/mfe-remote.service';
 import { MfeBasicFieldsComponent } from './mfe-basic-fields-form.component';
 import { StructuralOverridesComponent } from './mfe-structural-overrides-form.component';
+import { StructuralSubTypesComponent } from './mfe-structural-subtypes-form.component';
 
 type ViewModel = {
   mfeRemoteForm: FormGroup;
@@ -29,8 +34,10 @@ type ViewModel = {
   imports: [
     AsyncPipe,
     ReactiveFormsModule,
+    MatExpansionModule,
     MfeBasicFieldsComponent,
     StructuralOverridesComponent,
+    StructuralSubTypesComponent,
   ],
   template: `
     @if (viewModel$ | async; as vm) {
@@ -48,6 +55,12 @@ type ViewModel = {
           $any(vm.mfeRemoteForm.get('structuralOverrides'))
         "
       ></ngx-structural-overrides>
+      } @else {
+      <ngx-structural-subtypes
+        [structuralSubTypeControl]="
+          $any(vm.mfeRemoteForm.get('structuralSubType'))
+        "
+      ></ngx-structural-subtypes>
       }
     </form>
     }
@@ -75,9 +88,10 @@ export class MfeFormComponent {
     description: '',
     remoteEntryUrl: '',
     type: MfeRemoteType.USER_JOURNEY,
+    structuralSubType: StructuralSubType.HEADER,
     structuralOverrides: {
       header: StructuralOverrideMode.DISABLED,
-      nav: StructuralOverrideMode.DISABLED,
+      nav: StructuralNavOverrideMode.DISABLED,
       footer: StructuralOverrideMode.DISABLED,
     },
   });
@@ -86,20 +100,29 @@ export class MfeFormComponent {
   mfeTypes = Object.values(MfeRemoteType);
 
   private createFormGroup(baseFormGroup: any, value: Partial<IMfeRemote>): any {
-    return value.type === MfeRemoteType.USER_JOURNEY
-      ? {
-          ...baseFormGroup,
-          structuralOverrides: this.createStructuralOverridesFormGroup(
-            value.structuralOverrides
-          ),
-        }
-      : baseFormGroup;
+    if (value.type === MfeRemoteType.USER_JOURNEY) {
+      return {
+        ...baseFormGroup,
+        structuralOverrides: this.createStructuralOverridesFormGroup(
+          value.structuralOverrides
+        ),
+      };
+    }
+
+    // STRUCTURAL: ensure the structuralSubType control exists at creation time
+    return {
+      ...baseFormGroup,
+      structuralSubType: new FormControl(
+        value.structuralSubType ?? StructuralSubType.HEADER,
+        { nonNullable: true }
+      ),
+    };
   }
 
   private createStructuralOverridesFormGroup(
     structuralOverrides?: Partial<{
       header: StructuralOverrideMode;
-      nav: StructuralOverrideMode;
+      nav: StructuralNavOverrideMode;
       footer: StructuralOverrideMode;
     }>
   ): FormGroup {
@@ -179,18 +202,17 @@ export class MfeFormComponent {
     return viewModel.mfeRemoteForm.get('type')!.valueChanges.pipe(
       tap((type) => {
         if (type === MfeRemoteType.USER_JOURNEY) {
-          // Add structuralOverrides form group if it doesn't exist
-          if (!viewModel.mfeRemoteForm.get('structuralOverrides')) {
-            viewModel.mfeRemoteForm.addControl(
-              'structuralOverrides',
-              this.createStructuralOverridesFormGroup()
-            );
-          }
+          viewModel.mfeRemoteForm.removeControl('structuralSubType');
+          viewModel.mfeRemoteForm.addControl(
+            'structuralOverrides',
+            this.createStructuralOverridesFormGroup()
+          );
         } else if (type === MfeRemoteType.STRUCTURAL) {
-          // Remove structuralOverrides form group
-          if (viewModel.mfeRemoteForm.get('structuralOverrides')) {
-            viewModel.mfeRemoteForm.removeControl('structuralOverrides');
-          }
+          viewModel.mfeRemoteForm.removeControl('structuralOverrides');
+          viewModel.mfeRemoteForm.addControl(
+            'structuralSubType',
+            new FormControl(StructuralSubType.HEADER, { nonNullable: true })
+          );
         }
       })
     );

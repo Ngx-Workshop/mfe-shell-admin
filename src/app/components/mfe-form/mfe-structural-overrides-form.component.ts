@@ -123,8 +123,6 @@ export class StructuralOverridesComponent {
 
   structuralOverrideModes = [
     { value: StructuralOverrideMode.FULL, label: 'Full' },
-    { value: StructuralOverrideMode.VERBOSE, label: 'Verbose' },
-    { value: StructuralOverrideMode.MINIMAL, label: 'Minimal' },
     { value: StructuralOverrideMode.COMPACT, label: 'Compact' },
     { value: StructuralOverrideMode.DISABLED, label: 'Disabled' },
   ];

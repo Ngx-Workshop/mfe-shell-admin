@@ -9,15 +9,26 @@ export enum MfeRemoteType {
 
 export enum StructuralOverrideMode {
   FULL = 'full',
-  VERBOSE = 'verbose',
-  MINIMAL = 'minimal',
+  RELEXED = 'relexed',
   COMPACT = 'compact',
   DISABLED = 'disabled',
 }
 
+export enum StructuralNavOverrideMode {
+  VERBOSE = 'verbose',
+  MINIMAL = 'minimal',
+  DISABLED = 'disabled',
+}
+
+export enum StructuralSubType {
+  HEADER = 'header',
+  NAV = 'nav',
+  FOOTER = 'footer',
+}
+
 export type StructuralOverrides = {
   header?: StructuralOverrideMode;
-  nav?: StructuralOverrideMode;
+  nav?: StructuralNavOverrideMode;
   footer?: StructuralOverrideMode;
 };
 
@@ -27,6 +38,7 @@ export interface IMfeRemote {
   remoteEntryUrl: string;
   type: MfeRemoteType;
   structuralOverrides?: StructuralOverrides;
+  structuralSubType?: StructuralSubType;
   version: number;
   status?: string;
   description?: string;
@@ -45,17 +57,19 @@ export class MfeRemoteService {
   mfeRemotes$ = this.mfeRemotes.asObservable();
 
   testAuthEndpoint() {
-    return this.httpClient.get<{ status: string }>('/api/mfe-remotes/auth-test').pipe(
-      tap((response) => {
-        if (response.status !== 'ok') {
-          throw new Error('Authentication test failed');
-        }
-      }),
-      catchError((error) => {
-        console.warn('Error testing authentication endpoint:', error);
-        return of({ status: 'error' });
-      })
-    );
+    return this.httpClient
+      .get<{ status: string }>('/api/mfe-remotes/auth-test')
+      .pipe(
+        tap((response) => {
+          if (response.status !== 'ok') {
+            throw new Error('Authentication test failed');
+          }
+        }),
+        catchError((error) => {
+          console.warn('Error testing authentication endpoint:', error);
+          return of({ status: 'error' });
+        })
+      );
   }
 
   fetchMfeRemotes() {
@@ -78,7 +92,13 @@ export class MfeRemoteService {
     );
   }
 
-  updateMfeRemote({ _id, lastUpdated, __v, version, ...partialMfeRemote }: IMfeRemote) {
+  updateMfeRemote({
+    _id,
+    lastUpdated,
+    __v,
+    version,
+    ...partialMfeRemote
+  }: IMfeRemote) {
     return this.httpClient
       .patch<IMfeRemote>(`/api/mfe-remotes/${_id}`, partialMfeRemote)
       .pipe(
@@ -108,13 +128,15 @@ export class MfeRemoteService {
   }
 
   deleteMfeRemote(mfeRemote: IMfeRemote) {
-    return this.httpClient.delete<IMfeRemote>(`/api/mfe-remotes/${mfeRemote._id}`).pipe(
-      switchMap(() => this.fetchMfeRemotes()),
-      catchError((error) => {
-        console.warn('Error deleting MFE remote:', error);
-        return of([]);
-      })
-    );
+    return this.httpClient
+      .delete<IMfeRemote>(`/api/mfe-remotes/${mfeRemote._id}`)
+      .pipe(
+        switchMap(() => this.fetchMfeRemotes()),
+        catchError((error) => {
+          console.warn('Error deleting MFE remote:', error);
+          return of([]);
+        })
+      );
   }
 
   verifyMfeUrl(remoteEntryUrl: string) {
