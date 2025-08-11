@@ -3,7 +3,10 @@ import { Component, input, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { StructuralOverrideMode } from '../../services/mfe-remote.service';
+import {
+  StructuralNavOverrideMode,
+  StructuralOverrideMode,
+} from '../../services/mfe-remote.service';
 
 @Component({
   selector: 'ngx-structural-overrides',
@@ -62,7 +65,7 @@ import { StructuralOverrideMode } from '../../services/mfe-remote.service';
             <div class="override-section">
               <label>Navigation:</label>
               <mat-radio-group formControlName="nav">
-                @for (mode of structuralOverrideModes; track mode.value) {
+                @for (mode of structuralNavOverrideModes; track mode.value) {
                 <mat-radio-button [value]="mode.value">{{
                   mode.label
                 }}</mat-radio-button>
@@ -125,5 +128,11 @@ export class StructuralOverridesComponent {
     { value: StructuralOverrideMode.FULL, label: 'Full' },
     { value: StructuralOverrideMode.COMPACT, label: 'Compact' },
     { value: StructuralOverrideMode.DISABLED, label: 'Disabled' },
+  ];
+
+  structuralNavOverrideModes = [
+    { value: StructuralNavOverrideMode.VERBOSE, label: 'Verbose' },
+    { value: StructuralNavOverrideMode.MINIMAL, label: 'Minimal' },
+    { value: StructuralNavOverrideMode.DISABLED, label: 'Disabled' },
   ];
 }
