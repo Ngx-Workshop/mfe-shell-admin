@@ -82,7 +82,7 @@ export class DevModeOptionsComponent {
   devModeEnabledValueChange() {
     if (this.devModeEnabled) {
       if (!this.remoteEntryPoint) {
-        this.remoteEntryPoint = 'http://localhost:4200';
+        this.remoteEntryPoint = 'http://localhost:4201/remoteEntry.js';
         this.localStorageBrokerService.setItem(
           this.mfeRemote._id,
           this.remoteEntryPoint
