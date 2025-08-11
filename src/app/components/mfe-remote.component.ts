@@ -1,29 +1,16 @@
-import { loadRemoteModule } from '@angular-architects/module-federation';
-import {
-  Component,
-  inject,
-  input,
-  output,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { lastValueFrom, tap } from 'rxjs';
 import { IMfeRemote } from '../services/mfe-remote.service';
 import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
+import { DevModeOptionsComponent } from './dev-mode-options-dialog.component';
 import { MfeFormComponent } from './mfe-form/mfe-form.component';
+import { MfePreviewComponent } from './mfe-preview-dialog.component';
 import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
 
 @Component({
@@ -44,12 +31,15 @@ import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
         <button mat-icon-button matTooltip="Hello I'm some info">
           <mat-icon>info</mat-icon>
         </button>
+        <button mat-icon-button (click)="openDevModeOptions(mfe)">
+          <mat-icon>code</mat-icon>
+        </button>
         <button
           mat-icon-button
           matTooltip="Preview the MFE"
           (click)="previewMfeRemote(mfe.remoteEntryUrl)"
         >
-          <mat-icon>play_arrow</mat-icon>
+          <mat-icon>visibility</mat-icon>
         </button>
         <div class="flex-spacer"></div>
         <ngx-mfe-remote-info-group
@@ -136,39 +126,11 @@ export class MfeRemoteComponent {
   previewMfeRemote(mfeRemote: string) {
     this.dialog.open(MfePreviewComponent, { data: mfeRemote });
   }
-}
 
-@Component({
-  selector: 'ngx-mfe-preview',
-  imports: [MatButton, MatDialogTitle, MatDialogContent, MatDialogActions],
-  template: `
-    <h1 mat-dialog-title>Preview MFE</h1>
-    <mat-dialog-content>
-      {{ mfeRemoteUrl }}
-      <ng-container #mfeHost></ng-container>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button matButton (click)="dialogRef.close()">Cancel</button>
-    </mat-dialog-actions>
-  `,
-})
-export class MfePreviewComponent {
-  @ViewChild('mfeHost', { read: ViewContainerRef, static: true })
-  private mfeHost!: ViewContainerRef;
-
-  dialogRef = inject(MatDialogRef<ConfirmDeleteDialog>);
-  mfeRemoteUrl = inject<string>(MAT_DIALOG_DATA);
-
-  async ngOnInit() {
-    try {
-      const remoteComponent = await loadRemoteModule({
-        type: 'module',
-        remoteEntry: this.mfeRemoteUrl,
-        exposedModule: './Component',
-      });
-      this.mfeHost.createComponent(remoteComponent.default);
-    } catch (error) {
-      console.error('[MFE LOAD ERROR]', error);
-    }
+  openDevModeOptions(mfe: IMfeRemote) {
+    this.dialog.open(DevModeOptionsComponent, {
+      data: mfe,
+      width: '600px',
+    });
   }
 }

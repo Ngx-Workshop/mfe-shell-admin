@@ -1,12 +1,12 @@
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideLocalStorageBroker } from '@tmdjr/ngx-local-storage-client';
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +14,12 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
+    ...provideLocalStorageBroker({
+      iframeUrl:
+        'https://proxy.ngx-workshop.io/assets/ngx-broker/ngx-local-storage-broker.html',
+      brokerOrigin: 'https://proxy.ngx-workshop.io',
+      namespace: 'mfe-remotes',
+      requestTimeoutMs: 3000,
+    }),
   ],
 };
