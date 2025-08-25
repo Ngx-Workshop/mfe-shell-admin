@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { IMfeRemote } from '../services/mfe-remote.service';
+
+import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-mfe-remote-info-group',
@@ -43,5 +44,5 @@ import { IMfeRemote } from '../services/mfe-remote.service';
   ],
 })
 export class MfeRemoteInfoGroup {
-  mfe = input.required<IMfeRemote>();
+  mfe = input.required<MfeRemoteDto>();
 }

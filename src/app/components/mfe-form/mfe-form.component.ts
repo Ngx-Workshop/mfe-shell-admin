@@ -11,17 +11,16 @@ import {
 } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { forkJoin, lastValueFrom, map, mergeMap, startWith, tap } from 'rxjs';
-import {
-  IMfeRemote,
-  MfeRemoteService,
-  MfeRemoteType,
-  StructuralNavOverrideMode,
-  StructuralOverrideMode,
-  StructuralSubType,
-} from '../../services/mfe-remote.service';
+import { MfeRemoteService } from '../../services/mfe-remote.service';
 import { MfeBasicFieldsComponent } from './mfe-basic-fields-form.component';
 import { StructuralOverridesComponent } from './mfe-structural-overrides-form.component';
 import { StructuralSubTypesComponent } from './mfe-structural-subtypes-form.component';
+
+import type {
+  MfeRemoteDto,
+  StructuralNavOverrideMode,
+  StructuralOverrideMode,
+} from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 type ViewModel = {
   mfeRemoteForm: FormGroup;
@@ -80,24 +79,27 @@ export class MfeFormComponent {
   formBuilder = inject(FormBuilder);
   mfeRemoteService = inject(MfeRemoteService);
 
-  valueChange = output<Partial<IMfeRemote>>();
+  valueChange = output<Partial<MfeRemoteDto>>();
   formStatus = output<FormControlStatus | null>();
-  initialValue = input<Partial<IMfeRemote>>({
+  initialValue = input<Partial<MfeRemoteDto>>({
     name: '',
     description: '',
     remoteEntryUrl: '',
-    type: MfeRemoteType.USER_JOURNEY,
-    structuralSubType: StructuralSubType.HEADER,
+    type: 'user-journey',
+    structuralSubType: 'header',
     structuralOverrides: {
-      header: StructuralOverrideMode.DISABLED,
-      nav: StructuralNavOverrideMode.DISABLED,
-      footer: StructuralOverrideMode.DISABLED,
+      header: 'disabled',
+      nav: 'disabled',
+      footer: 'disabled',
     },
   });
   initialValue$ = toObservable(this.initialValue);
 
-  private createFormGroup(baseFormGroup: any, value: Partial<IMfeRemote>): any {
-    if (value.type === MfeRemoteType.USER_JOURNEY) {
+  private createFormGroup(
+    baseFormGroup: any,
+    value: Partial<MfeRemoteDto>
+  ): any {
+    if (value.type === 'user-journey') {
       return {
         ...baseFormGroup,
         structuralOverrides: this.createStructuralOverridesFormGroup(
@@ -109,10 +111,9 @@ export class MfeFormComponent {
     // STRUCTURAL: ensure the structuralSubType control exists at creation time
     return {
       ...baseFormGroup,
-      structuralSubType: new FormControl(
-        value.structuralSubType ?? StructuralSubType.HEADER,
-        { nonNullable: true }
-      ),
+      structuralSubType: new FormControl(value.structuralSubType ?? 'header', {
+        nonNullable: true,
+      }),
     };
   }
 
@@ -124,18 +125,9 @@ export class MfeFormComponent {
     }>
   ): FormGroup {
     return this.formBuilder.nonNullable.group({
-      header: [
-        structuralOverrides?.header || StructuralOverrideMode.DISABLED,
-        Validators.required,
-      ],
-      nav: [
-        structuralOverrides?.nav || StructuralOverrideMode.DISABLED,
-        Validators.required,
-      ],
-      footer: [
-        structuralOverrides?.footer || StructuralOverrideMode.DISABLED,
-        Validators.required,
-      ],
+      header: [structuralOverrides?.header || 'disabled', Validators.required],
+      nav: [structuralOverrides?.nav || 'disabled', Validators.required],
+      footer: [structuralOverrides?.footer || 'disabled', Validators.required],
     });
   }
 
@@ -185,7 +177,7 @@ export class MfeFormComponent {
     return viewModel.mfeRemoteForm.valueChanges.pipe(
       tap((value) => {
         // If type is STRUCTURAL, remove structuralOverrides from the emitted value
-        if (value.type === MfeRemoteType.STRUCTURAL) {
+        if (value.type === 'structural') {
           const { structuralOverrides, ...valueWithoutOverrides } = value;
           this.valueChange.emit(valueWithoutOverrides);
         } else {
@@ -198,17 +190,17 @@ export class MfeFormComponent {
   watchTypeChanges(viewModel: ViewModel) {
     return viewModel.mfeRemoteForm.get('type')!.valueChanges.pipe(
       tap((type) => {
-        if (type === MfeRemoteType.USER_JOURNEY) {
+        if (type === 'user-journey') {
           viewModel.mfeRemoteForm.removeControl('structuralSubType');
           viewModel.mfeRemoteForm.addControl(
             'structuralOverrides',
             this.createStructuralOverridesFormGroup()
           );
-        } else if (type === MfeRemoteType.STRUCTURAL) {
+        } else if (type === 'structural') {
           viewModel.mfeRemoteForm.removeControl('structuralOverrides');
           viewModel.mfeRemoteForm.addControl(
             'structuralSubType',
-            new FormControl(StructuralSubType.HEADER, { nonNullable: true })
+            new FormControl('header', { nonNullable: true })
           );
         }
       })

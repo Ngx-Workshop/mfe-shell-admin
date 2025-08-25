@@ -8,8 +8,9 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { IMfeRemote } from '../services/mfe-remote.service';
 import { MfeFormComponent } from './mfe-form/mfe-form.component';
+
+import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-create-mfe-dialog',
@@ -56,5 +57,5 @@ import { MfeFormComponent } from './mfe-form/mfe-form.component';
 export class CreateMFEDialog {
   dialogRef = inject(MatDialogRef<CreateMFEDialog>);
   disableCreateButton = true;
-  mfeRemote: Partial<IMfeRemote> = {};
+  mfeRemote: Partial<MfeRemoteDto> = {};
 }

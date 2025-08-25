@@ -6,12 +6,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { lastValueFrom, tap } from 'rxjs';
-import { IMfeRemote } from '../services/mfe-remote.service';
 import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
 import { DevModeOptionsComponent } from './dev-mode-options-dialog.component';
 import { MfeFormComponent } from './mfe-form/mfe-form.component';
 import { MfePreviewComponent } from './mfe-preview-dialog.component';
 import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
+
+import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-mfe-remote',
@@ -95,13 +96,13 @@ import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
 export class MfeRemoteComponent {
   dialog = inject(MatDialog);
   formBuilder = inject(FormBuilder);
-  initialValue = input.required<IMfeRemote>();
+  initialValue = input.required<MfeRemoteDto>();
 
-  mfeRemote: Partial<IMfeRemote> = {};
+  mfeRemote: Partial<MfeRemoteDto> = {};
 
-  update = output<IMfeRemote>();
-  archive = output<IMfeRemote>();
-  delete = output<IMfeRemote>();
+  update = output<MfeRemoteDto>();
+  archive = output<MfeRemoteDto>();
+  delete = output<MfeRemoteDto>();
 
   disableUpdateButton = false;
 
@@ -127,7 +128,7 @@ export class MfeRemoteComponent {
     this.dialog.open(MfePreviewComponent, { data: mfeRemote });
   }
 
-  openDevModeOptions(mfe: IMfeRemote) {
+  openDevModeOptions(mfe: MfeRemoteDto) {
     this.dialog.open(DevModeOptionsComponent, {
       data: mfe,
       width: '600px',

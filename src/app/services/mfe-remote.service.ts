@@ -2,50 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, of, switchMap, tap } from 'rxjs';
 
-export enum MfeRemoteType {
-  STRUCTURAL = 'structural',
-  USER_JOURNEY = 'user-journey',
-}
-
-export enum StructuralOverrideMode {
-  FULL = 'full',
-  RELEXED = 'relexed',
-  COMPACT = 'compact',
-  DISABLED = 'disabled',
-}
-
-export enum StructuralNavOverrideMode {
-  VERBOSE = 'verbose',
-  MINIMAL = 'minimal',
-  DISABLED = 'disabled',
-}
-
-export enum StructuralSubType {
-  HEADER = 'header',
-  NAV = 'nav',
-  FOOTER = 'footer',
-}
-
-export type StructuralOverrides = {
-  header?: StructuralOverrideMode;
-  nav?: StructuralNavOverrideMode;
-  footer?: StructuralOverrideMode;
-};
-
-export interface IMfeRemote {
-  _id: string;
-  name: string;
-  remoteEntryUrl: string;
-  type: MfeRemoteType;
-  structuralOverrides?: StructuralOverrides;
-  structuralSubType?: StructuralSubType;
-  version: number;
-  status?: string;
-  description?: string;
-  lastUpdated?: Date;
-  archived?: boolean;
-  __v?: number;
-}
+import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Injectable({
   providedIn: 'root',
@@ -53,7 +10,7 @@ export interface IMfeRemote {
 export class MfeRemoteService {
   httpClient = inject(HttpClient);
 
-  mfeRemotes = new BehaviorSubject<IMfeRemote[]>([]);
+  mfeRemotes = new BehaviorSubject<MfeRemoteDto[]>([]);
   mfeRemotes$ = this.mfeRemotes.asObservable();
 
   testAuthEndpoint() {
@@ -73,7 +30,7 @@ export class MfeRemoteService {
   }
 
   fetchMfeRemotes() {
-    return this.httpClient.get<IMfeRemote[]>('/api/mfe-remotes').pipe(
+    return this.httpClient.get<MfeRemoteDto[]>('/api/mfe-remotes').pipe(
       tap((remotes) => this.mfeRemotes.next(remotes)),
       catchError((error) => {
         console.warn('Error fetching MFE remotes:', error);
@@ -82,25 +39,26 @@ export class MfeRemoteService {
     );
   }
 
-  createMfeRemote(mfeRemote: IMfeRemote) {
-    return this.httpClient.post<IMfeRemote>('/api/mfe-remotes', mfeRemote).pipe(
-      switchMap(() => this.fetchMfeRemotes()),
-      catchError((error) => {
-        console.warn('Error creating MFE remote:', error);
-        return of([]);
-      })
-    );
+  createMfeRemote(mfeRemote: MfeRemoteDto) {
+    return this.httpClient
+      .post<MfeRemoteDto>('/api/mfe-remotes', mfeRemote)
+      .pipe(
+        switchMap(() => this.fetchMfeRemotes()),
+        catchError((error) => {
+          console.warn('Error creating MFE remote:', error);
+          return of([]);
+        })
+      );
   }
 
   updateMfeRemote({
     _id,
     lastUpdated,
-    __v,
     version,
     ...partialMfeRemote
-  }: IMfeRemote) {
+  }: MfeRemoteDto) {
     return this.httpClient
-      .patch<IMfeRemote>(`/api/mfe-remotes/${_id}`, partialMfeRemote)
+      .patch<MfeRemoteDto>(`/api/mfe-remotes/${_id}`, partialMfeRemote)
       .pipe(
         switchMap(() => this.fetchMfeRemotes()),
         catchError((error) => {
@@ -110,9 +68,9 @@ export class MfeRemoteService {
       );
   }
 
-  archiveMfeRemote(mfeRemote: IMfeRemote) {
+  archiveMfeRemote(mfeRemote: MfeRemoteDto) {
     return this.httpClient
-      .patch<IMfeRemote>(
+      .patch<MfeRemoteDto>(
         `/api/mfe-remotes/${mfeRemote._id}/${
           mfeRemote.archived ? 'unarchive' : 'archive'
         }`,
@@ -127,9 +85,9 @@ export class MfeRemoteService {
       );
   }
 
-  deleteMfeRemote(mfeRemote: IMfeRemote) {
+  deleteMfeRemote(mfeRemote: MfeRemoteDto) {
     return this.httpClient
-      .delete<IMfeRemote>(`/api/mfe-remotes/${mfeRemote._id}`)
+      .delete<MfeRemoteDto>(`/api/mfe-remotes/${mfeRemote._id}`)
       .pipe(
         switchMap(() => this.fetchMfeRemotes()),
         catchError((error) => {

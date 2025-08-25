@@ -3,10 +3,21 @@ import { Component, input, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import {
+
+import type {
   StructuralNavOverrideMode,
   StructuralOverrideMode,
-} from '../../services/mfe-remote.service';
+} from '@tmdjr/ngx-mfe-orchestrator-contracts';
+
+type StructuralOverrideModes = {
+  value: StructuralOverrideMode;
+  label: string;
+}[];
+
+type StructuralNavOverrideModes = {
+  value: StructuralNavOverrideMode;
+  label: string;
+}[];
 
 @Component({
   selector: 'ngx-structural-overrides',
@@ -124,15 +135,15 @@ export class StructuralOverridesComponent {
 
   readonly panelOpenState = signal(false);
 
-  structuralOverrideModes = [
-    { value: StructuralOverrideMode.FULL, label: 'Full' },
-    { value: StructuralOverrideMode.COMPACT, label: 'Compact' },
-    { value: StructuralOverrideMode.DISABLED, label: 'Disabled' },
+  structuralOverrideModes: StructuralOverrideModes = [
+    { value: 'full', label: 'Full' },
+    { value: 'compact', label: 'Compact' },
+    { value: 'disabled', label: 'Disabled' },
   ];
 
-  structuralNavOverrideModes = [
-    { value: StructuralNavOverrideMode.VERBOSE, label: 'Verbose' },
-    { value: StructuralNavOverrideMode.MINIMAL, label: 'Minimal' },
-    { value: StructuralNavOverrideMode.DISABLED, label: 'Disabled' },
+  structuralNavOverrideModes: StructuralNavOverrideModes = [
+    { value: 'verbose', label: 'Verbose' },
+    { value: 'minimal', label: 'Minimal' },
+    { value: 'disabled', label: 'Disabled' },
   ];
 }

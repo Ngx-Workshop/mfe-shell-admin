@@ -4,7 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MfeRemoteType } from '../../services/mfe-remote.service';
+
+import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-mfe-basic-fields',
@@ -71,7 +72,7 @@ import { MfeRemoteType } from '../../services/mfe-remote.service';
 export class MfeBasicFieldsComponent {
   form = input.required<FormGroup>();
   errorMessages = input.required<{ [key: string]: string }>();
-  mfeTypes = Object.values(MfeRemoteType);
+  mfeTypes: MfeRemoteType[] = ['structural', 'user-journey'];
   verifyUrlClick = output<string>();
 
   verifyUrl() {

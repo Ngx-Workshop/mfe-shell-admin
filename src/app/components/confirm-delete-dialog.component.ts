@@ -1,13 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import {
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogActions,
-  MatDialogRef,
   MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
 } from '@angular/material/dialog';
-import { IMfeRemote } from '../services/mfe-remote.service';
+
+import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-confirm-delete-dialog',
@@ -36,7 +37,7 @@ import { IMfeRemote } from '../services/mfe-remote.service';
 })
 export class ConfirmDeleteDialog {
   dialogRef = inject(MatDialogRef<ConfirmDeleteDialog>);
-  mfeRemote = inject<IMfeRemote>(MAT_DIALOG_DATA);
+  mfeRemote = inject<MfeRemoteDto>(MAT_DIALOG_DATA);
 
   confirmDelete() {
     this.dialogRef.close(this.mfeRemote);
