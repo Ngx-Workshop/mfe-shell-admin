@@ -55,6 +55,7 @@ export class MfeRemoteService {
     _id,
     lastUpdated,
     version,
+    __v,
     ...partialMfeRemote
   }: MfeRemoteDto) {
     return this.httpClient
