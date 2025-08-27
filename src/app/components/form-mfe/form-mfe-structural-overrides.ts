@@ -39,7 +39,9 @@ type StructuralNavOverrideModes = {
           (closed)="panelOpenState.set(false)"
         >
           <mat-expansion-panel-header>
+            @if(panelOpenState()) {
             <mat-panel-title>Structural Overrides</mat-panel-title>
+            } @else {
             <mat-panel-description>
               <span
                 >Header:
@@ -60,6 +62,7 @@ type StructuralNavOverrideModes = {
                 }}</span
               >
             </mat-panel-description>
+            }
           </mat-expansion-panel-header>
           <div class="overrides-container">
             <div class="override-section">
@@ -102,7 +105,7 @@ type StructuralNavOverrideModes = {
   styles: [
     `
       mat-panel-description.mat-expansion-panel-header-description {
-        justify-content: space-around;
+        justify-content: space-between;
       }
       .structural-overrides-group {
         .overrides-container {
@@ -118,11 +121,10 @@ type StructuralNavOverrideModes = {
               font-size: 0.9em;
             }
             mat-radio-group {
-              display: flex;
-              flex-direction: row;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
               gap: 1rem;
-              flex-wrap: wrap;
-              justify-content: space-between;
+              align-items: center;
             }
           }
         }

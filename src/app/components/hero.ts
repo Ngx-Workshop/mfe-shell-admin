@@ -16,7 +16,9 @@ import { CreateMFEDialog } from './dialog/dialog-create-mfe';
           <h2>A tool to manage MFE remotes!</h2>
         </div>
         <div class="header-actions">
-          <button mat-raised-button (click)="openDialog()">Create MFE</button>
+          <button mat-raised-button (click)="openDialog()">
+            Create a New MFE Remote
+          </button>
         </div>
       </div>
     </header>
