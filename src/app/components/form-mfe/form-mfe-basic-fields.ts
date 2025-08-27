@@ -3,9 +3,6 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-
-import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-mfe-basic-fields',
@@ -14,14 +11,14 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSelectModule,
   ],
   template: `
-    <div [formGroup]="form()">
+    @if (formGroup(); as mfeRemoteForm) {
+    <div [formGroup]="mfeRemoteForm">
       <mat-form-field>
         <mat-label>Name</mat-label>
         <input formControlName="name" matInput />
-        @if (form().get('name')?.errors) {
+        @if (mfeRemoteForm.get('name')?.errors) {
         <mat-error>{{ errorMessages()['name'] }}</mat-error>
         }
       </mat-form-field>
@@ -33,21 +30,14 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
         <mat-form-field>
           <mat-label>Remote Entry URL</mat-label>
           <input formControlName="remoteEntryUrl" matInput />
-          @if (form().get('remoteEntryUrl')?.errors) {
+          @if (mfeRemoteForm.get('remoteEntryUrl')?.errors) {
           <mat-error>{{ errorMessages()['remoteEntryUrl'] }}</mat-error>
           }
         </mat-form-field>
         <button mat-button (click)="verifyUrl()">Verify</button>
       </div>
-      <mat-form-field>
-        <mat-label>Type</mat-label>
-        <mat-select formControlName="type">
-          @for (type of mfeTypes; track type) {
-          <mat-option [value]="type">{{ type }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
     </div>
+    }
   `,
   styles: [
     `
@@ -70,13 +60,12 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
   ],
 })
 export class MfeBasicFields {
-  form = input.required<FormGroup>();
+  formGroup = input.required<FormGroup>({ alias: 'mfeRemoteForm' });
   errorMessages = input.required<{ [key: string]: string }>();
-  mfeTypes: MfeRemoteType[] = ['structural', 'user-journey'];
   verifyUrlClick = output<string>();
 
   verifyUrl() {
-    const url = this.form().get('remoteEntryUrl')?.value;
+    const url = this.formGroup().get('remoteEntryUrl')?.value;
     if (url) {
       this.verifyUrlClick.emit(url);
     }

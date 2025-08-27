@@ -29,7 +29,7 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
     @if (initialValue(); as mfe) {
     <mat-card appearance="filled">
       <div class="accordion-toggle" (click)="accordionItem.toggle()">
-        {{ mfe.name }}
+        <p>{{ mfe.name }}</p>
         <mat-icon>
           {{ accordionItem.expanded ? 'expand_less' : 'expand_more' }}
         </mat-icon>
@@ -86,6 +86,10 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
             font-size: 1.75rem;
             width: 1.75rem;
             height: 1.75rem;
+          }
+          p {
+            font-size: 1.25rem;
+            font-weight: 200;
           }
         }
         mat-card-content {

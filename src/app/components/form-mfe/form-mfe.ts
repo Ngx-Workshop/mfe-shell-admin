@@ -13,14 +13,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { forkJoin, lastValueFrom, map, mergeMap, startWith, tap } from 'rxjs';
 import { ApiMfeRemotes } from '../../services/api-mfe-remotes';
 import { MfeBasicFields } from './form-mfe-basic-fields';
-import { StructuralOverrides } from './form-mfe-structural-overrides';
-import { StructuralSubTypeOptions } from './form-mfe-structural-subtypes';
 
+import { MatDivider } from '@angular/material/divider';
 import type {
   MfeRemoteDto,
   StructuralNavOverrideMode,
   StructuralOverrideMode,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
+import { StructuralFields } from './form-mfe-structural-fields';
 
 type ViewModel = {
   mfeRemoteForm: FormGroup;
@@ -35,31 +35,26 @@ type ViewModel = {
     ReactiveFormsModule,
     MatExpansionModule,
     MfeBasicFields,
-    StructuralOverrides,
-    StructuralSubTypeOptions,
+    StructuralFields,
+    MatDivider,
   ],
   template: `
     @if (viewModel$ | async; as vm) {
     <form [formGroup]="vm.mfeRemoteForm">
+      <h3>Structural Configuration</h3>
+      <mat-divider></mat-divider>
+      <ngx-structural-fields
+        [mfeRemoteForm]="vm.mfeRemoteForm"
+      ></ngx-structural-fields>
+
+      <h3>Details</h3>
+      <mat-divider></mat-divider>
       <ngx-mfe-basic-fields
-        [form]="vm.mfeRemoteForm"
+        [mfeRemoteForm]="vm.mfeRemoteForm"
         [errorMessages]="vm.formErrorMessages"
         (verifyUrlClick)="verifyMfeUrl($event)"
       ></ngx-mfe-basic-fields>
-
-      @if (vm.mfeRemoteForm.get('type')?.value === 'user-journey') {
-      <ngx-structural-overrides
-        [structuralOverridesForm]="
-          $any(vm.mfeRemoteForm.get('structuralOverrides'))
-        "
-      ></ngx-structural-overrides>
-      } @else {
-      <ngx-structural-subtypes
-        [structuralSubTypeControl]="
-          $any(vm.mfeRemoteForm.get('structuralSubType'))
-        "
-      ></ngx-structural-subtypes>
-      }
+      <mat-divider></mat-divider>
     </form>
     }
   `,
@@ -70,6 +65,9 @@ type ViewModel = {
           display: flex;
           flex-direction: column;
           gap: 0.5em;
+          mat-divider {
+            margin-bottom: 1em;
+          }
         }
       }
     `,
