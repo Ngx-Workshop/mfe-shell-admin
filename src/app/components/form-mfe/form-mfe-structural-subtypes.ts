@@ -39,7 +39,7 @@ type StructuralSubTypes = {
     `,
   ],
 })
-export class StructuralSubTypesComponent {
+export class StructuralSubTypeOptions {
   structuralSubTypeControl = input.required<FormControl>();
 
   readonly panelOpenState = signal(false);

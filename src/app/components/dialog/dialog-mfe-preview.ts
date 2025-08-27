@@ -8,7 +8,7 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
+import { ConfirmDeleteDialog } from './dialog-confirm-delete';
 
 @Component({
   selector: 'ngx-mfe-preview',
@@ -24,7 +24,7 @@ import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
     </mat-dialog-actions>
   `,
 })
-export class MfePreviewComponent {
+export class MfePreview {
   @ViewChild('mfeHost', { read: ViewContainerRef, static: true })
   private mfeHost!: ViewContainerRef;
 
@@ -33,12 +33,12 @@ export class MfePreviewComponent {
 
   async ngOnInit() {
     try {
-      const remoteComponent = await loadRemoteModule({
+      const remote = await loadRemoteModule({
         type: 'module',
         remoteEntry: this.mfeRemoteUrl,
-        exposedModule: './Component',
+        exposedModule: './',
       });
-      this.mfeHost.createComponent(remoteComponent.default);
+      this.mfeHost.createComponent(remote.default);
     } catch (error) {
       console.error('[MFE LOAD ERROR]', error);
     }

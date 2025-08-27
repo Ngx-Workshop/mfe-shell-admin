@@ -3,15 +3,15 @@ import { Component, inject } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { lastValueFrom } from 'rxjs';
-import { HeroComponent } from '../components/hero.component';
-import { MfeRemoteComponent } from '../components/mfe-remote.component';
-import { MfeRemoteService } from '../services/mfe-remote.service';
+import { Hero } from '../components/hero';
+import { MfeRemote } from '../components/mfe-remote-card';
+import { ApiMfeRemotes } from '../services/api-mfe-remotes';
 
 import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-mfe-remotes',
-  imports: [HeroComponent, MfeRemoteComponent, AsyncPipe, MatCard],
+  imports: [Hero, MfeRemote, AsyncPipe, MatCard],
   template: `
     <ngx-hero></ngx-hero>
     <mat-card appearance="outlined">
@@ -47,20 +47,20 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     `,
   ],
 })
-export class MfeRemoteListComponent {
+export class ListMfeRemotes {
   dialog = inject(MatDialog);
-  mfeRemoteService = inject(MfeRemoteService);
-  mfeRemotes = this.mfeRemoteService.mfeRemotes$;
+  apiMfeRemotes = inject(ApiMfeRemotes);
+  mfeRemotes = this.apiMfeRemotes.mfeRemotes$;
 
   updateMfeRemote(remote: MfeRemoteDto) {
-    lastValueFrom(this.mfeRemoteService.updateMfeRemote(remote));
+    lastValueFrom(this.apiMfeRemotes.updateMfeRemote(remote));
   }
 
   archiveMfeRemote(remote: MfeRemoteDto) {
-    lastValueFrom(this.mfeRemoteService.archiveMfeRemote(remote));
+    lastValueFrom(this.apiMfeRemotes.archiveMfeRemote(remote));
   }
 
   deleteMfeRemote(remote: MfeRemoteDto) {
-    lastValueFrom(this.mfeRemoteService.deleteMfeRemote(remote));
+    lastValueFrom(this.apiMfeRemotes.deleteMfeRemote(remote));
   }
 }

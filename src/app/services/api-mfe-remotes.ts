@@ -7,7 +7,7 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 @Injectable({
   providedIn: 'root',
 })
-export class MfeRemoteService {
+export class ApiMfeRemotes {
   httpClient = inject(HttpClient);
 
   mfeRemotes = new BehaviorSubject<MfeRemoteDto[]>([]);

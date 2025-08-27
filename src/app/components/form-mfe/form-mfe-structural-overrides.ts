@@ -130,7 +130,7 @@ type StructuralNavOverrideModes = {
     `,
   ],
 })
-export class StructuralOverridesComponent {
+export class StructuralOverrides {
   structuralOverridesForm = input.required<FormGroup>();
 
   readonly panelOpenState = signal(false);

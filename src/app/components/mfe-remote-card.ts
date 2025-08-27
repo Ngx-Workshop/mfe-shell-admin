@@ -6,11 +6,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { lastValueFrom, tap } from 'rxjs';
-import { ConfirmDeleteDialog } from './confirm-delete-dialog.component';
-import { DevModeOptionsComponent } from './dev-mode-options-dialog.component';
-import { MfeFormComponent } from './mfe-form/mfe-form.component';
-import { MfePreviewComponent } from './mfe-preview-dialog.component';
-import { MfeRemoteInfoGroup } from './mfe-remote-info-group.component';
+import { ConfirmDeleteDialog } from './dialog/dialog-confirm-delete';
+import { DevModeOptions } from './dialog/dialog-dev-mode-options';
+import { MfePreview } from './dialog/dialog-mfe-preview';
+import { MfeForm } from './form-mfe/form-mfe';
+import { MfeInfoGroup } from './mfe-info-group';
 
 import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
@@ -21,8 +21,8 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     MatButton,
     MatIconButton,
     MatIcon,
-    MfeFormComponent,
-    MfeRemoteInfoGroup,
+    MfeForm,
+    MfeInfoGroup,
     MatTooltip,
   ],
   template: `
@@ -93,7 +93,7 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     `,
   ],
 })
-export class MfeRemoteComponent {
+export class MfeRemote {
   dialog = inject(MatDialog);
   formBuilder = inject(FormBuilder);
   initialValue = input.required<MfeRemoteDto>();
@@ -125,11 +125,11 @@ export class MfeRemoteComponent {
   }
 
   previewMfeRemote(mfeRemote: string) {
-    this.dialog.open(MfePreviewComponent, { data: mfeRemote });
+    this.dialog.open(MfePreview, { data: mfeRemote });
   }
 
   openDevModeOptions(mfe: MfeRemoteDto) {
-    this.dialog.open(DevModeOptionsComponent, {
+    this.dialog.open(DevModeOptions, {
       data: mfe,
       width: '600px',
     });

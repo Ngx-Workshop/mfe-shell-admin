@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ngx-sign-in',
-  template: ` <h1>Sign In</h1> `,
+  selector: 'ngx-not-found',
+  template: ` <h1>Not Found</h1> `,
 })
-export class SignInComponent {
+export class NotFound {
   // This component can be expanded with a sign-in form and logic
   // For now, it serves as a placeholder for the sign-in route
 }

@@ -4,27 +4,19 @@ import { mfeRemoteResolver } from './resolvers/mfe-remote.resolver';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/mfe-remote-list',
+    redirectTo: '/list-mfe-remotes',
     pathMatch: 'full',
   },
   {
-    path: 'sign-in',
+    path: 'list-mfe-remotes',
     loadComponent: () =>
-      import('./routes/sign-in.component').then((m) => m.SignInComponent),
-  },
-  {
-    path: 'mfe-remote-list',
-    loadComponent: () =>
-      import('./routes/mfe-remote-list.component').then(
-        (m) => m.MfeRemoteListComponent
-      ),
+      import('./routes/list-mfe-remotes').then((m) => m.ListMfeRemotes),
     resolve: {
       mfeRemotes: mfeRemoteResolver,
     },
   },
   {
     path: '**',
-    loadComponent: () =>
-      import('./routes/not-found.component').then((m) => m.NotFoundComponent),
+    loadComponent: () => import('./routes/not-found').then((m) => m.NotFound),
   },
 ];

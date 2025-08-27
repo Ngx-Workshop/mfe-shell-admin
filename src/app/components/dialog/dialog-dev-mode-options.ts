@@ -62,8 +62,8 @@ import { LocalStorageBrokerService } from '@tmdjr/ngx-local-storage-client';
     `,
   ],
 })
-export class DevModeOptionsComponent {
-  dialogRef = inject(MatDialogRef<DevModeOptionsComponent>);
+export class DevModeOptions {
+  dialogRef = inject(MatDialogRef<DevModeOptions>);
   mfeRemote = inject(MAT_DIALOG_DATA);
   localStorageBrokerService = inject(LocalStorageBrokerService);
 

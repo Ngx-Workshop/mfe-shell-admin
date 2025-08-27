@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { iif, lastValueFrom, of, switchMap } from 'rxjs';
-import { MfeRemoteService } from '../services/mfe-remote.service';
-import { CreateMFEDialog } from './create-mfe-dialog.component';
+import { ApiMfeRemotes } from '../services/api-mfe-remotes';
+import { CreateMFEDialog } from './dialog/dialog-create-mfe';
 
 @Component({
   selector: 'ngx-hero',
@@ -83,9 +83,9 @@ import { CreateMFEDialog } from './create-mfe-dialog.component';
     `,
   ],
 })
-export class HeroComponent {
+export class Hero {
   dialog = inject(MatDialog);
-  mfeRemoteService = inject(MfeRemoteService);
+  apiMfeRemotes = inject(ApiMfeRemotes);
 
   openDialog(): void {
     lastValueFrom(
@@ -96,7 +96,7 @@ export class HeroComponent {
           switchMap((mfeRemote) =>
             iif(
               () => !!mfeRemote,
-              this.mfeRemoteService.createMfeRemote(mfeRemote),
+              this.apiMfeRemotes.createMfeRemote(mfeRemote),
               of(void 0)
             )
           )

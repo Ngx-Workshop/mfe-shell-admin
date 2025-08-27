@@ -11,10 +11,10 @@ import {
 } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { forkJoin, lastValueFrom, map, mergeMap, startWith, tap } from 'rxjs';
-import { MfeRemoteService } from '../../services/mfe-remote.service';
-import { MfeBasicFieldsComponent } from './mfe-basic-fields-form.component';
-import { StructuralOverridesComponent } from './mfe-structural-overrides-form.component';
-import { StructuralSubTypesComponent } from './mfe-structural-subtypes-form.component';
+import { ApiMfeRemotes } from '../../services/api-mfe-remotes';
+import { MfeBasicFields } from './form-mfe-basic-fields';
+import { StructuralOverrides } from './form-mfe-structural-overrides';
+import { StructuralSubTypeOptions } from './form-mfe-structural-subtypes';
 
 import type {
   MfeRemoteDto,
@@ -34,9 +34,9 @@ type ViewModel = {
     AsyncPipe,
     ReactiveFormsModule,
     MatExpansionModule,
-    MfeBasicFieldsComponent,
-    StructuralOverridesComponent,
-    StructuralSubTypesComponent,
+    MfeBasicFields,
+    StructuralOverrides,
+    StructuralSubTypeOptions,
   ],
   template: `
     @if (viewModel$ | async; as vm) {
@@ -75,9 +75,9 @@ type ViewModel = {
     `,
   ],
 })
-export class MfeFormComponent {
+export class MfeForm {
   formBuilder = inject(FormBuilder);
-  mfeRemoteService = inject(MfeRemoteService);
+  apiMfeRemotes = inject(ApiMfeRemotes);
 
   valueChange = output<Partial<MfeRemoteDto>>();
   formStatus = output<FormControlStatus | null>();
@@ -222,6 +222,6 @@ export class MfeFormComponent {
   }
 
   verifyMfeUrl(url: string) {
-    lastValueFrom(this.mfeRemoteService.verifyMfeUrl(url));
+    lastValueFrom(this.apiMfeRemotes.verifyMfeUrl(url));
   }
 }

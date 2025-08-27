@@ -69,7 +69,7 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     `,
   ],
 })
-export class MfeBasicFieldsComponent {
+export class MfeBasicFields {
   form = input.required<FormGroup>();
   errorMessages = input.required<{ [key: string]: string }>();
   mfeTypes: MfeRemoteType[] = ['structural', 'user-journey'];

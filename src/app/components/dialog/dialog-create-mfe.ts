@@ -8,7 +8,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MfeFormComponent } from './mfe-form/mfe-form.component';
+import { MfeForm } from '../form-mfe/form-mfe';
 
 import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
@@ -21,7 +21,7 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MfeFormComponent,
+    MfeForm,
   ],
   template: `
     <h2 mat-dialog-title>Create MFE Remote catalog entry?</h2>

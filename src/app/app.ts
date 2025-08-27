@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { NavBarComponent } from './components/nav-bar.component';
-import { RouterOutlet } from '@angular/router';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { MfeRemoteService } from './services/mfe-remote.service';
+import { RouterOutlet } from '@angular/router';
+import { NavBar } from './components/nav-bar';
+import { ApiMfeRemotes } from './services/api-mfe-remotes';
 
 @Component({
   selector: 'ngx-root',
@@ -12,7 +12,7 @@ import { MfeRemoteService } from './services/mfe-remote.service';
       useValue: { appearance: 'outline' },
     },
   ],
-  imports: [NavBarComponent, RouterOutlet],
+  imports: [NavBar, RouterOutlet],
   template: `
     <ngx-nav-bar></ngx-nav-bar>
     <main>
@@ -34,10 +34,8 @@ import { MfeRemoteService } from './services/mfe-remote.service';
   ],
 })
 export class App {
-
-  constructor(private mfeRemoteService: MfeRemoteService) {
+  constructor(private apiMfeRemotes: ApiMfeRemotes) {
     // Initialize the service to fetch MFE remotes on app start
-    // this.mfeRemoteService.testAuthEndpoint().subscribe();
+    // this.apiMfeRemotes.testAuthEndpoint().subscribe();
   }
-    
 }

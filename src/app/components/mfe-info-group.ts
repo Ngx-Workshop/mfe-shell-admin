@@ -43,6 +43,6 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     `,
   ],
 })
-export class MfeRemoteInfoGroup {
+export class MfeInfoGroup {
   mfe = input.required<MfeRemoteDto>();
 }

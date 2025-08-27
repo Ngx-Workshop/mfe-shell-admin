@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { ThemePickerComponent } from './theme-picker.component';
+import { MatIcon } from '@angular/material/icon';
+import { NgxThemePicker } from '@tmdjr/ngx-theme-picker';
 
 @Component({
   selector: 'ngx-nav-bar',
-  imports: [MatIcon, MatButtonModule, ThemePickerComponent],
+  imports: [MatIcon, MatButtonModule, NgxThemePicker],
   template: `
     <nav class="docs-navbar-header">
       <a mat-button routerLink="/">
@@ -38,4 +38,4 @@ import { ThemePickerComponent } from './theme-picker.component';
     `,
   ],
 })
-export class NavBarComponent {}
+export class NavBar {}
