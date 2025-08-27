@@ -4,83 +4,94 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
 import { lastValueFrom, tap } from 'rxjs';
 import { ConfirmDeleteDialog } from './dialog/dialog-confirm-delete';
 import { DevModeOptions } from './dialog/dialog-dev-mode-options';
 import { MfePreview } from './dialog/dialog-mfe-preview';
 import { MfeForm } from './form-mfe/form-mfe';
-import { MfeInfoGroup } from './mfe-info-group';
 
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
+import { MfeRemoteCardHeader } from './mfe-remote-card-header';
 
 @Component({
   selector: 'ngx-mfe-remote',
   imports: [
+    CdkAccordionModule,
     MatCardModule,
     MatButton,
     MatIconButton,
     MatIcon,
     MfeForm,
-    MfeInfoGroup,
-    MatTooltip,
+    MfeRemoteCardHeader,
   ],
   template: `
     @if (initialValue(); as mfe) {
     <mat-card appearance="filled">
-      <mat-card-header>
-        <button mat-icon-button matTooltip="Hello I'm some info">
-          <mat-icon>info</mat-icon>
-        </button>
-        <button mat-icon-button (click)="openDevModeOptions(mfe)">
-          <mat-icon>code</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          matTooltip="Preview the MFE"
-          (click)="previewMfeRemote(mfe.remoteEntryUrl)"
-        >
-          <mat-icon>visibility</mat-icon>
-        </button>
-        <div class="flex-spacer"></div>
-        <ngx-mfe-remote-info-group
-          [mfe]="initialValue()"
-        ></ngx-mfe-remote-info-group>
-      </mat-card-header>
-      <mat-card-content>
-        <ngx-mfe-form
-          [initialValue]="initialValue()"
-          (formStatus)="disableUpdateButton = $event !== 'VALID'"
-          (valueChange)="mfeRemote = $event"
-        ></ngx-mfe-form>
-      </mat-card-content>
-      <mat-card-actions>
-        <button matIconButton (click)="deleteRemote()">
-          <mat-icon class="delete">delete</mat-icon>
-        </button>
-        <button matButton (click)="archive.emit(mfe)">
-          {{ mfe.archived ? 'Archived' : 'Archive' }}
-        </button>
-        <div class="flex-spacer"></div>
-        <button
-          matButton
-          (click)="updateRemote()"
-          [disabled]="disableUpdateButton"
-        >
-          Update
-        </button>
-      </mat-card-actions>
+      <div class="accordion-toggle" (click)="accordionItem.toggle()">
+        {{ mfe.name }}
+        <mat-icon>
+          {{ accordionItem.expanded ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </div>
+      <cdk-accordion>
+        <cdk-accordion-item #accordionItem="cdkAccordionItem">
+          @if(accordionItem.expanded) {
+          <mat-card-header>
+            <ngx-mfe-remote-card-header
+              [initialValue]="initialValue()"
+              (openDevModeOptions)="openDevModeOptions(mfe)"
+              (previewMfeRemote)="previewMfeRemote(mfe.remoteEntryUrl)"
+            ></ngx-mfe-remote-card-header>
+          </mat-card-header>
+          <mat-card-content>
+            <ngx-mfe-form
+              [initialValue]="initialValue()"
+              (formStatus)="disableUpdateButton = $event !== 'VALID'"
+              (valueChange)="mfeRemote = $event"
+            ></ngx-mfe-form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button matIconButton (click)="deleteRemote()">
+              <mat-icon class="delete">delete</mat-icon>
+            </button>
+            <button matButton (click)="archive.emit(mfe)">
+              {{ mfe.archived ? 'Archived' : 'Archive' }}
+            </button>
+            <div class="flex-spacer"></div>
+            <button
+              matButton
+              (click)="updateRemote()"
+              [disabled]="disableUpdateButton"
+            >
+              Update
+            </button>
+          </mat-card-actions>
+          }
+        </cdk-accordion-item>
+      </cdk-accordion>
     </mat-card>
     }
   `,
   styles: [
     `
       :host {
+        .accordion-toggle {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 16px;
+          cursor: pointer;
+          mat-icon {
+            font-size: 1.75rem;
+            width: 1.75rem;
+            height: 1.75rem;
+          }
+        }
         mat-card-content {
           display: flex;
           flex-direction: column;
         }
-        mat-card-header,
         mat-card-actions {
           display: flex;
           flex-direction: row;
@@ -93,7 +104,7 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     `,
   ],
 })
-export class MfeRemote {
+export class MfeRemoteCard {
   dialog = inject(MatDialog);
   formBuilder = inject(FormBuilder);
   initialValue = input.required<MfeRemoteDto>();

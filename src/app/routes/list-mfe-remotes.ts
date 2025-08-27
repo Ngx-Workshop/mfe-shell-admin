@@ -4,14 +4,14 @@ import { MatCard } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { lastValueFrom } from 'rxjs';
 import { Hero } from '../components/hero';
-import { MfeRemote } from '../components/mfe-remote-card';
+import { MfeRemoteCard } from '../components/mfe-remote-card';
 import { ApiMfeRemotes } from '../services/api-mfe-remotes';
 
 import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 
 @Component({
   selector: 'ngx-mfe-remotes',
-  imports: [Hero, MfeRemote, AsyncPipe, MatCard],
+  imports: [Hero, MfeRemoteCard, AsyncPipe, MatCard],
   template: `
     <ngx-hero></ngx-hero>
     <mat-card appearance="outlined">
