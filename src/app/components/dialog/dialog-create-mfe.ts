@@ -24,23 +24,25 @@ import type { MfeRemoteDto } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     MfeForm,
   ],
   template: `
-    <h2 mat-dialog-title>Create MFE Remote catalog entry?</h2>
-    <mat-dialog-content>
-      <ngx-mfe-form
-        (formStatus)="disableCreateButton = $event !== 'VALID'"
-        (valueChange)="mfeRemote = $event"
-      ></ngx-mfe-form>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button matButton (click)="dialogRef.close()">Cancel</button>
-      <button
-        matButton
-        (click)="dialogRef.close(this.mfeRemote)"
-        [disabled]="disableCreateButton"
-      >
-        Create
-      </button>
-    </mat-dialog-actions>
+    <div>
+      <h2 mat-dialog-title>Create MFE Remote catalog entry?</h2>
+      <mat-dialog-content>
+        <ngx-mfe-form
+          (formStatus)="disableCreateButton = $event !== 'VALID'"
+          (valueChange)="mfeRemote = $event"
+        ></ngx-mfe-form>
+      </mat-dialog-content>
+      <mat-dialog-actions>
+        <button matButton (click)="dialogRef.close()">Cancel</button>
+        <button
+          matButton
+          (click)="dialogRef.close(this.mfeRemote)"
+          [disabled]="disableCreateButton"
+        >
+          Create
+        </button>
+      </mat-dialog-actions>
+    </div>
   `,
   styles: [
     `

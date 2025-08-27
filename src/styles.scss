@@ -118,9 +118,15 @@ body {
 :root {
   @include mat.dialog-overrides(
     (
-      container-max-width: 662px,
+      container-min-width: 320px,
+      container-max-width: 700px,
     )
   );
+}
+
+/* Specific dialog styles */
+.full-width-dialog.cdk-overlay-pane.mat-mdc-dialog-panel {
+  width: 100%;
 }
 
 .flex-spacer {

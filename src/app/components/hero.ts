@@ -27,8 +27,6 @@ import { CreateMFEDialog } from './dialog/dialog-create-mfe';
     `
       :host {
         width: 100%;
-
-        // width: 632px;
         .header-background {
           overflow: hidden;
           position: relative;
@@ -92,7 +90,9 @@ export class Hero {
   openDialog(): void {
     lastValueFrom(
       this.dialog
-        .open(CreateMFEDialog)
+        .open(CreateMFEDialog, {
+          panelClass: 'full-width-dialog',
+        })
         .afterClosed()
         .pipe(
           switchMap((mfeRemote) =>
