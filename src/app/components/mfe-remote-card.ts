@@ -93,7 +93,7 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
               <ngx-mfe-remote-card-header
                 [initialValue]="initialValue()"
                 (openDevModeOptions)="openDevModeOptions(mfe)"
-                (previewMfeRemote)="previewMfeRemote(mfe.remoteEntryUrl)"
+                (previewMfeRemote)="previewMfeRemote(mfe)"
               ></ngx-mfe-remote-card-header>
             </mat-card-header>
             <mat-card-content>
@@ -203,8 +203,11 @@ export class MfeRemoteCard {
     );
   }
 
-  previewMfeRemote(mfeRemote: string) {
-    this.dialog.open(MfePreview, { data: mfeRemote });
+  previewMfeRemote(mfeRemote: MfeRemoteDto) {
+    this.dialog.open(MfePreview, {
+      data: mfeRemote,
+      panelClass: ['mfe-preview', 'full-width-dialog'],
+    });
   }
 
   openDevModeOptions(mfe: MfeRemoteDto) {

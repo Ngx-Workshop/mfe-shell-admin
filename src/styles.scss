@@ -128,6 +128,9 @@ body {
 .full-width-dialog.cdk-overlay-pane.mat-mdc-dialog-panel {
   width: 100%;
 }
+.mfe-preview.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: 90vw;
+}
 
 .flex-spacer {
   flex-grow: 1;
