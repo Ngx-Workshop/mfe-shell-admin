@@ -8,6 +8,7 @@ module.exports = withModuleFederationPlugin({
     mfe1: 'http://localhost:3000/remoteEntry.js',
   },
 
+  // Shared Singleton Services
   shared: {
     '@angular/core': {
       singleton: true,

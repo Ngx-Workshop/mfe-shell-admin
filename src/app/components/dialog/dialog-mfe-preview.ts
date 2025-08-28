@@ -36,7 +36,7 @@ export class MfePreview {
       const remote = await loadRemoteModule({
         type: 'module',
         remoteEntry: this.mfeRemoteUrl,
-        exposedModule: './',
+        exposedModule: './Component',
       });
       this.mfeHost.createComponent(remote.default);
     } catch (error) {

@@ -39,7 +39,6 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
         style({
           height: '0px',
           opacity: 0,
-          overflow: 'hidden',
         })
       ),
       state(
@@ -47,7 +46,6 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
         style({
           height: '*',
           opacity: 1,
-          overflow: 'visible',
         })
       ),
       transition('collapsed <=> expanded', [
@@ -150,6 +148,7 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
 
         .accordion-content {
           display: block;
+          overflow: hidden;
         }
 
         mat-card-content {
