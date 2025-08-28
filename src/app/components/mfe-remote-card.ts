@@ -1,3 +1,10 @@
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -25,49 +32,96 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
     MfeForm,
     MfeRemoteCardHeader,
   ],
+  animations: [
+    trigger('expandCollapse', [
+      state(
+        'collapsed',
+        style({
+          height: '0px',
+          opacity: 0,
+          overflow: 'hidden',
+        })
+      ),
+      state(
+        'expanded',
+        style({
+          height: '*',
+          opacity: 1,
+          overflow: 'visible',
+        })
+      ),
+      transition('collapsed <=> expanded', [
+        animate('300ms cubic-bezier(0.4, 0.0, 0.2, 1)'),
+      ]),
+    ]),
+    trigger('iconRotate', [
+      state(
+        'collapsed',
+        style({
+          transform: 'rotate(0deg)',
+        })
+      ),
+      state(
+        'expanded',
+        style({
+          transform: 'rotate(180deg)',
+        })
+      ),
+      transition('collapsed <=> expanded', [
+        animate('300ms cubic-bezier(0.4, 0.0, 0.2, 1)'),
+      ]),
+    ]),
+  ],
   template: `
     @if (initialValue(); as mfe) {
     <mat-card appearance="filled">
       <div class="accordion-toggle" (click)="accordionItem.toggle()">
         <p>{{ mfe.name }}</p>
-        <mat-icon>
-          {{ accordionItem.expanded ? 'expand_less' : 'expand_more' }}
+        <mat-icon
+          [@iconRotate]="accordionItem.expanded ? 'expanded' : 'collapsed'"
+        >
+          expand_more
         </mat-icon>
       </div>
       <cdk-accordion>
         <cdk-accordion-item #accordionItem="cdkAccordionItem">
-          @if(accordionItem.expanded) {
-          <mat-card-header>
-            <ngx-mfe-remote-card-header
-              [initialValue]="initialValue()"
-              (openDevModeOptions)="openDevModeOptions(mfe)"
-              (previewMfeRemote)="previewMfeRemote(mfe.remoteEntryUrl)"
-            ></ngx-mfe-remote-card-header>
-          </mat-card-header>
-          <mat-card-content>
-            <ngx-mfe-form
-              [initialValue]="initialValue()"
-              (formStatus)="disableUpdateButton = $event !== 'VALID'"
-              (valueChange)="mfeRemote = $event"
-            ></ngx-mfe-form>
-          </mat-card-content>
-          <mat-card-actions>
-            <button matIconButton (click)="deleteRemote()">
-              <mat-icon class="delete">delete</mat-icon>
-            </button>
-            <button matButton (click)="archive.emit(mfe)">
-              {{ mfe.archived ? 'Archived' : 'Archive' }}
-            </button>
-            <div class="flex-spacer"></div>
-            <button
-              matButton
-              (click)="updateRemote()"
-              [disabled]="disableUpdateButton"
-            >
-              Update
-            </button>
-          </mat-card-actions>
-          }
+          <div
+            class="accordion-content"
+            [@expandCollapse]="
+              accordionItem.expanded ? 'expanded' : 'collapsed'
+            "
+          >
+            <mat-card-header>
+              <ngx-mfe-remote-card-header
+                [initialValue]="initialValue()"
+                (openDevModeOptions)="openDevModeOptions(mfe)"
+                (previewMfeRemote)="previewMfeRemote(mfe.remoteEntryUrl)"
+              ></ngx-mfe-remote-card-header>
+            </mat-card-header>
+            <mat-card-content>
+              <ngx-mfe-form
+                [initialValue]="initialValue()"
+                (formStatus)="disableUpdateButton = $event !== 'VALID'"
+                (valueChange)="mfeRemote = $event"
+              ></ngx-mfe-form>
+            </mat-card-content>
+            <mat-card-actions>
+              <button matIconButton (click)="deleteRemote()">
+                <mat-icon class="delete">delete</mat-icon>
+              </button>
+              <button matButton (click)="archive.emit(mfe)">
+                {{ mfe.archived ? 'Archived' : 'Archive' }}
+              </button>
+              <div class="flex-spacer"></div>
+              <button
+                matButton
+                (click)="updateRemote()"
+                [disabled]="disableUpdateButton"
+              >
+                Update
+              </button>
+            </mat-card-actions>
+          </div>
         </cdk-accordion-item>
       </cdk-accordion>
     </mat-card>
@@ -86,16 +140,23 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
             font-size: 1.75rem;
             width: 1.75rem;
             height: 1.75rem;
+            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
           }
           p {
             font-size: 1.25rem;
             font-weight: 200;
           }
         }
+
+        .accordion-content {
+          display: block;
+        }
+
         mat-card-content {
           display: flex;
           flex-direction: column;
         }
+
         mat-card-actions {
           display: flex;
           flex-direction: row;
@@ -103,6 +164,10 @@ import { MfeRemoteCardHeader } from './mfe-remote-card-header';
           .delete {
             color: var(--mat-sys-error);
           }
+        }
+
+        .flex-spacer {
+          flex: 1;
         }
       }
     `,
