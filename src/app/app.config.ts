@@ -18,8 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     ...provideLocalStorageBroker({
       iframeUrl:
-        'https://proxy.ngx-workshop.io/assets/ngx-broker/ngx-local-storage-broker.html',
-      brokerOrigin: 'https://proxy.ngx-workshop.io',
+        'https://beta.ngx-workshop.io/assets/ngx-broker/ngx-local-storage-broker.html',
+      brokerOrigin: 'https://beta.ngx-workshop.io',
       namespace: 'mfe-remotes',
       requestTimeoutMs: 3000,
     }),
