@@ -1,4 +1,4 @@
-name: Deploy Ngx MFE Orchestrator UI to DO Droplet
+name: Deploy Ngx-Workshop Admin UI to DO Droplet
 
 on:
   push:
@@ -29,8 +29,8 @@ jobs:
           host: ${{ secrets.DROPLET_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "dist/ngx-mfe-orchestrator-ui/*"
-          target: "/opt/ngx-mfe-orchestrator-ui/"
+          source: 'dist/mfe-shell-admin/*'
+          target: '/opt/mfe-shell-admin/'
           strip_components: 2
 
       - name: SSH and restart Nginx (optional, if needed)
