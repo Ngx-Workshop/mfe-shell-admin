@@ -85,6 +85,7 @@ export class MfeForm {
     remoteEntryUrl: '',
     type: 'user-journey',
     structuralSubType: 'header',
+    useRoutes: false,
     structuralOverrides: {
       header: 'disabled',
       nav: 'disabled',

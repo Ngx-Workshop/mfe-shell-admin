@@ -3,6 +3,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StructuralOverrides } from './form-mfe-structural-overrides';
 import { StructuralSubTypeOptions } from './form-mfe-structural-subtypes';
 
@@ -17,6 +18,7 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSlideToggleModule,
   ],
   template: `
     @if(formGroup(); as mfeRemoteForm) {
@@ -30,6 +32,10 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
         </mat-select>
       </mat-form-field>
       @if (mfeRemoteForm.get('type')?.value === 'user-journey') {
+      <mat-slide-toggle labelPosition="before" formControlName="useRoutes">
+        Routes are
+        {{ mfeRemoteForm.get('useRoutes')?.getRawValue() ? 'Off' : 'On' }}
+      </mat-slide-toggle>
       <ngx-structural-overrides
         [structuralOverridesForm]="
           $any(mfeRemoteForm.get('structuralOverrides'))
