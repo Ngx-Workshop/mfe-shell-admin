@@ -32,9 +32,11 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
         </mat-select>
       </mat-form-field>
       @if (mfeRemoteForm.get('type')?.value === 'user-journey') {
-      <mat-slide-toggle labelPosition="before" formControlName="useRoutes">
-        Routes are
-        {{ mfeRemoteForm.get('useRoutes')?.getRawValue() ? 'Off' : 'On' }}
+      <mat-slide-toggle formControlName="useRoutes">
+        <b>
+          Routes are
+          {{ mfeRemoteForm.get('useRoutes')?.value ? 'On' : 'Off' }}</b
+        >
       </mat-slide-toggle>
       <ngx-structural-overrides
         [structuralOverridesForm]="
@@ -60,6 +62,10 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
           ngx-structural-overrides {
             margin-bottom: 1.7rem;
           }
+        }
+
+        mat-slide-toggle {
+          margin: 1rem 0;
         }
       }
     `,

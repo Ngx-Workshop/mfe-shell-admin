@@ -101,6 +101,7 @@ export class MfeForm {
     if (value.type === 'user-journey') {
       return {
         ...baseFormGroup,
+        useRoutes: [value.useRoutes ?? false],
         structuralOverrides: this.createStructuralOverridesFormGroup(
           value.structuralOverrides
         ),
