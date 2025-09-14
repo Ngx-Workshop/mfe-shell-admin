@@ -1,4 +1,8 @@
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
@@ -7,12 +11,16 @@ import {
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideLocalStorageBroker } from '@tmdjr/ngx-local-storage-client';
+import {
+  NGX_USER_METADATA_CONFIG,
+  authInterceptor,
+} from '@tmdjr/ngx-user-metadata';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
@@ -23,5 +31,12 @@ export const appConfig: ApplicationConfig = {
       namespace: 'mfe-remotes',
       requestTimeoutMs: 3000,
     }),
+    // Configure the ngx-user-metadata package to redirect to sign-in page for demo
+    {
+      provide: NGX_USER_METADATA_CONFIG,
+      useValue: {
+        redirectUrl: 'https://auth.ngx-workshop.io/',
+      },
+    },
   ],
 };
