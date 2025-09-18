@@ -86,6 +86,7 @@ export class MfeForm {
     type: 'user-journey',
     structuralSubType: 'header',
     useRoutes: false,
+    requiresAuth: false,
     structuralOverrides: {
       header: 'disabled',
       nav: 'disabled',
@@ -102,6 +103,7 @@ export class MfeForm {
       return {
         ...baseFormGroup,
         useRoutes: [value.useRoutes ?? false],
+        requiresAuth: [value.requiresAuth ?? false],
         structuralOverrides: this.createStructuralOverridesFormGroup(
           value.structuralOverrides
         ),

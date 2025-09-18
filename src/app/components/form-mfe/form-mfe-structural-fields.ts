@@ -34,8 +34,14 @@ import type { MfeRemoteType } from '@tmdjr/ngx-mfe-orchestrator-contracts';
       @if (mfeRemoteForm.get('type')?.value === 'user-journey') {
       <mat-slide-toggle formControlName="useRoutes">
         <b>
-          Routes are
+          Uses Routes
           {{ mfeRemoteForm.get('useRoutes')?.value ? 'On' : 'Off' }}</b
+        >
+      </mat-slide-toggle>
+      <mat-slide-toggle formControlName="requiresAuth">
+        <b>
+          Authenticated Route
+          {{ mfeRemoteForm.get('requiresAuth')?.value ? 'On' : 'Off' }}</b
         >
       </mat-slide-toggle>
       <ngx-structural-overrides
