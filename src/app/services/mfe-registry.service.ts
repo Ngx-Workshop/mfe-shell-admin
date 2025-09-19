@@ -144,10 +144,7 @@ export class MfeRegistryService {
    */
   registerUserJourneyRoutes(router: Router, staticRoutes: Routes = []): void {
     this.buildUserJourneyRoutes().then((dynamic) => {
-      // TODO Clean this up and make dashboard defult route if it exists
-      // Diff from workshop shell becuase of the auth guard on the parent route
-      staticRoutes[0].children = [...staticRoutes[0].children!, ...dynamic];
-      router.resetConfig([...staticRoutes]);
+      router.resetConfig([...staticRoutes, ...dynamic]);
 
       console.log(
         '%c[MFE REGISTRY] Registered dynamic routes:',
