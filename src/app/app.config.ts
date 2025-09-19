@@ -5,20 +5,41 @@ import {
 } from '@angular/common/http';
 import {
   ApplicationConfig,
+  inject,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { provideLocalStorageBroker } from '@tmdjr/ngx-local-storage-client';
+import { ThemePickerService } from '@tmdjr/ngx-theme-picker';
 import {
-  NGX_USER_METADATA_CONFIG,
   authInterceptor,
+  NGX_USER_METADATA_CONFIG,
 } from '@tmdjr/ngx-user-metadata';
+import { firstValueFrom, tap } from 'rxjs';
 import { routes } from './app.routes';
+import { MfeRegistryService } from './services/mfe-registry.service';
+
+function initializerFn() {
+  const mfeRegistryService = inject(MfeRegistryService);
+  const router = inject(Router);
+  return firstValueFrom(
+    mfeRegistryService
+      .loadMfeRemotes()
+      .pipe(
+        tap(() => mfeRegistryService.registerUserJourneyRoutes(router, routes))
+      )
+  );
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAppInitializer(initializerFn),
+    provideAppInitializer(() => {
+      inject(ThemePickerService);
+    }),
     provideAnimations(),
     provideHttpClient(
       withInterceptorsFromDi(),

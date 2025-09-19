@@ -18,11 +18,10 @@ export const routes: Routes = [
             exposedModule: './Routes',
           }).then((m) => m.Routes),
       },
-      {
-        path: '**',
-        loadComponent: () =>
-          import('./routes/not-found').then((m) => m.NotFound),
-      },
     ],
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./routes/not-found').then((m) => m.NotFound),
   },
 ];
