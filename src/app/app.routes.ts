@@ -5,7 +5,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [userAuthenticatedGuard],
-    children: [{ path: '', redirectTo: 'mfe-orchestrator', pathMatch: 'full' }],
+    children: [],
   },
   {
     path: '**',

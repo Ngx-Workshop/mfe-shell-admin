@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'ngx-not-found',
-  template: ` <h1>Not Found</h1> `,
+  template: `<h1>Not Found</h1> `,
 })
 export class NotFound {
   // This component can be expanded with a sign-in form and logic
