@@ -72,8 +72,10 @@ export class MfeRegistryService {
         console.log(
           `%c[MFE REGISTRY] Merging remoteEntryUrl override for ${remote.name} from localStorage key ${remote._id}:`,
           'color: orange; font-weight: bold;',
-          remoteEntryUrl
+          remoteEntryUrl,
+          { ...remote, remoteEntryUrl }
         );
+
         return remoteEntryUrl ? { ...remote, remoteEntryUrl } : remote;
       })
     );
