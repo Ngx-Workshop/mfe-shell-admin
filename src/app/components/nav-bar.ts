@@ -1,18 +1,30 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 import { NgxThemePicker } from '@tmdjr/ngx-theme-picker';
+import { map } from 'rxjs';
+import { MfeRegistryService } from '../services/mfe-registry.service';
 
 @Component({
   selector: 'ngx-nav-bar',
-  imports: [MatIcon, MatButtonModule, NgxThemePicker],
+  imports: [MatIcon, MatButtonModule, NgxThemePicker, AsyncPipe, RouterLink],
   template: `
     <nav class="docs-navbar-header">
+      @if(viewModel$ | async; as userJourneyRemotes) {
       <a mat-button routerLink="/">
         <mat-icon>connecting_airports</mat-icon>Ngx MFE Orchestrator
       </a>
+
+      @for (remote of userJourneyRemotes; track $index) {
+      <a mat-button [routerLink]="[remote.routeUrl]">
+        {{ remote.routeUrl }}
+      </a>
+      }
       <div class="flex-spacer"></div>
       <ngx-theme-picker></ngx-theme-picker>
+      }
     </nav>
   `,
   styles: [
@@ -38,4 +50,16 @@ import { NgxThemePicker } from '@tmdjr/ngx-theme-picker';
     `,
   ],
 })
-export class NavBar {}
+export class NavBar {
+  viewModel$ = inject(MfeRegistryService).userJourneyRemotes$.pipe(
+    map((remotes) =>
+      remotes.map((remote) => ({
+        routeUrl: this.toSlug(remote.name),
+        ...remote,
+      }))
+    )
+  );
+  toSlug(value: string): string {
+    return value.trim().toLowerCase().replace(/\s+/g, '-');
+  }
+}
