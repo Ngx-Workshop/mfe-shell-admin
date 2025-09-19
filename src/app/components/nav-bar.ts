@@ -14,12 +14,12 @@ import { MfeRegistryService } from '../services/mfe-registry.service';
     <nav class="docs-navbar-header">
       @if(viewModel$ | async; as userJourneyRemotes) {
       <a mat-button routerLink="/">
-        <mat-icon>connecting_airports</mat-icon>Ngx MFE Orchestrator
+        <mat-icon>admin_panel_settings</mat-icon>Ngx-Admin
       </a>
 
       @for (remote of userJourneyRemotes; track $index) {
       <a mat-button [routerLink]="[remote.routeUrl]">
-        {{ remote.routeUrl }}
+        {{ remote.name }}
       </a>
       }
       <div class="flex-spacer"></div>
