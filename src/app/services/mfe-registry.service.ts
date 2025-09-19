@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router, Routes } from '@angular/router';
 import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
 
+import { LocalStorageBrokerService } from '@tmdjr/ngx-local-storage-client';
 import type {
   MfeRemoteDto,
   StructuralOverridesDto,
@@ -18,6 +19,7 @@ export function toSlug(value: string): string {
 @Injectable({ providedIn: 'root' })
 export class MfeRegistryService {
   http = inject(HttpClient);
+  localStorageBrokerService = inject(LocalStorageBrokerService);
 
   remotes = new BehaviorSubject<MfeRemoteDto[]>([]);
   remotes$ = this.remotes.asObservable();
@@ -47,7 +49,9 @@ export class MfeRegistryService {
   // Helper method to get remote URL by structural sub type
   private getRemoteUrlBySubType(subType: StructuralSubType) {
     return this.remotes$.pipe(
-      map((remotes) => this.mergeOverrideRemotesURLsFromLocalStorage(remotes)),
+      switchMap((remotes) =>
+        from(this.mergeOverrideRemotesURLsFromLocalStorage(remotes))
+      ),
       map(
         (remotes) =>
           remotes.find((remote) => remote.structuralSubType === subType)
@@ -56,19 +60,17 @@ export class MfeRegistryService {
     );
   }
 
-  private mergeOverrideRemotesURLsFromLocalStorage(
+  private async mergeOverrideRemotesURLsFromLocalStorage(
     remotes: MfeRemoteDto[]
-  ): MfeRemoteDto[] {
-    const updatedRemotes = remotes.map((remote) => {
-      const localStorageKey = `mfe-remotes:${remote._id}`;
-      const remoteEntryUrl = localStorage.getItem(localStorageKey);
-      console.log(
-        `%c[MFE REGISTRY] Merging remoteEntryUrl override for ${remote.name} from localStorage key ${localStorageKey}:`,
-        'color: orange; font-weight: bold;',
-        remoteEntryUrl
-      );
-      return remoteEntryUrl ? { ...remote, remoteEntryUrl } : remote;
-    });
+  ): Promise<MfeRemoteDto[]> {
+    const updatedRemotes = await Promise.all(
+      remotes.map(async (remote) => {
+        const remoteEntryUrl = await this.localStorageBrokerService.getItem(
+          remote._id
+        );
+        return remoteEntryUrl ? { ...remote, remoteEntryUrl } : remote;
+      })
+    );
     return updatedRemotes;
   }
 
@@ -92,13 +94,16 @@ export class MfeRegistryService {
    * Build `Routes` from current user-journey remotes.
    * Path = slug(name), remoteEntry = remoteEntryUrl
    */
-  buildUserJourneyRoutes(): Routes {
+  async buildUserJourneyRoutes(): Promise<Routes> {
     console.log(
       '%c[MFE REGISTRY] Building user-journey routes from remotes:',
       'color: blue; font-weight: bold;',
       this.remotes.value
     );
-    return this.mergeOverrideRemotesURLsFromLocalStorage(this.remotes.value)
+    const merged = await this.mergeOverrideRemotesURLsFromLocalStorage(
+      this.remotes.value
+    );
+    return merged
       .filter((r) => r.type === 'user-journey')
       .map((r) => ({
         path: toSlug(r.name),
@@ -129,16 +134,17 @@ export class MfeRegistryService {
    * Call this after `loadMfeRemotes()` resolves (e.g., from an APP_INITIALIZER).
    */
   registerUserJourneyRoutes(router: Router, staticRoutes: Routes = []): void {
-    const dynamic = this.buildUserJourneyRoutes();
-    // TODO Clean this up and make dashboard defult route if it exists
-    // Diff from workshop shell becuase of the auth guard on the parent route
-    staticRoutes[0].children = [...staticRoutes[0].children!, ...dynamic];
-    router.resetConfig([...staticRoutes]);
+    this.buildUserJourneyRoutes().then((dynamic) => {
+      // TODO Clean this up and make dashboard defult route if it exists
+      // Diff from workshop shell becuase of the auth guard on the parent route
+      staticRoutes[0].children = [...staticRoutes[0].children!, ...dynamic];
+      router.resetConfig([...staticRoutes]);
 
-    console.log(
-      '%c[MFE REGISTRY] Registered dynamic routes:',
-      'color: green; font-weight: bold;',
-      dynamic
-    );
+      console.log(
+        '%c[MFE REGISTRY] Registered dynamic routes:',
+        'color: green; font-weight: bold;',
+        dynamic
+      );
+    });
   }
 }
