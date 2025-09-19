@@ -7,9 +7,9 @@ export const routes: Routes = [
     path: '',
     canActivate: [userAuthenticatedGuard],
     children: [
-      { path: '', redirectTo: 'list-mfe-remotes', pathMatch: 'full' },
+      { path: '', redirectTo: 'mfe-orchestrator', pathMatch: 'full' },
       {
-        path: 'list-mfe-remotes',
+        path: 'mfe-orchestrator',
         loadComponent: () =>
           import('./routes/list-mfe-remotes').then((m) => m.ListMfeRemotes),
         resolve: { mfeRemotes: mfeRemoteResolver },
