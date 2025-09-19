@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { RouterOutlet } from '@angular/router';
 import { NavBar } from './components/nav-bar';
+import { MfeRegistryService } from './services/mfe-registry.service';
 
 @Component({
   selector: 'ngx-root',
@@ -11,12 +13,16 @@ import { NavBar } from './components/nav-bar';
       useValue: { appearance: 'outline' },
     },
   ],
-  imports: [NavBar, RouterOutlet],
+  imports: [NavBar, RouterOutlet, AsyncPipe],
   template: `
+    @if(viewModel$ | async; as vm) {
     <ngx-nav-bar></ngx-nav-bar>
     <main>
       <router-outlet></router-outlet>
     </main>
+    } @else {
+    <p>Loading...</p>
+    }
   `,
   styles: [
     `
@@ -32,4 +38,7 @@ import { NavBar } from './components/nav-bar';
     `,
   ],
 })
-export class App {}
+export class App {
+  private registry = inject(MfeRegistryService);
+  protected viewModel$ = this.registry.userJourneyRemotes$;
+}
