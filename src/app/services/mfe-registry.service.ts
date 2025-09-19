@@ -69,11 +69,12 @@ export class MfeRegistryService {
           remote._id
         );
 
+        const test = structuredClone({ ...remote, remoteEntryUrl });
         console.log(
           `%c[MFE REGISTRY] Merging remoteEntryUrl override for ${remote.name} from localStorage key ${remote._id}:`,
           'color: orange; font-weight: bold;',
           remoteEntryUrl,
-          { ...remote, remoteEntryUrl }
+          test
         );
 
         return remoteEntryUrl ? { ...remote, remoteEntryUrl } : remote;
