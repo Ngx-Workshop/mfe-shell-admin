@@ -31,6 +31,12 @@ module.exports = withModuleFederationPlugin({
       requiredVersion: '20.1.6',
     },
 
+    '@angular/common/http': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '20.1.6',
+    },
+
     // If you use Material/CDK, share them too
     '@angular/cdk': {
       singleton: true,
