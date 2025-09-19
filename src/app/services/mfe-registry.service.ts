@@ -62,6 +62,11 @@ export class MfeRegistryService {
     const updatedRemotes = remotes.map((remote) => {
       const localStorageKey = `mfe-remotes:${remote._id}`;
       const remoteEntryUrl = localStorage.getItem(localStorageKey);
+      console.log(
+        `%c[MFE REGISTRY] Merging remoteEntryUrl override for ${remote.name} from localStorage key ${localStorageKey}:`,
+        'color: orange; font-weight: bold;',
+        remoteEntryUrl
+      );
       return remoteEntryUrl ? { ...remote, remoteEntryUrl } : remote;
     });
     return updatedRemotes;
