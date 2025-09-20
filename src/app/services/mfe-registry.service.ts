@@ -41,9 +41,9 @@ export class MfeRegistryService {
 
   // Reactive structural modes that MFEs can respond to
   structuralModes = new BehaviorSubject<StructuralOverridesDto>({
-    header: 'full',
-    nav: 'verbose',
-    footer: 'full',
+    header: 'disabled',
+    nav: 'disabled',
+    footer: 'disabled',
   });
   structuralModes$ = this.structuralModes.asObservable();
 
