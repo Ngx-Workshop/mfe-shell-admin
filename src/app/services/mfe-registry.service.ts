@@ -2,15 +2,14 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router, Routes } from '@angular/router';
-import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
-import { BehaviorSubject, map, tap } from 'rxjs';
-
 import { LocalStorageBrokerService } from '@tmdjr/ngx-local-storage-client';
 import type {
   MfeRemoteDto,
   StructuralOverridesDto,
   StructuralSubType,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
+import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
+import { BehaviorSubject, map, tap } from 'rxjs';
 
 export function toSlug(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, '-');
