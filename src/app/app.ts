@@ -55,13 +55,46 @@ import { MfeRegistryService } from './services/mfe-registry.service';
   `,
   styles: [
     `
-      :host {
-        ngx-nav-bar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 2;
+      .layout {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+          'nav header'
+          'nav main'
+          'nav footer';
+        min-height: 100dvh;
+        height: 100dvh;
+      }
+      .nav {
+        grid-area: nav;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        height: 100dvh;
+        z-index: 2;
+      }
+      header {
+        grid-area: header;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+      }
+      main {
+        grid-area: main;
+      }
+      footer {
+        grid-area: footer;
+      }
+      /* Collapse to a single-column layout when the nav MFE is hidden or not rendered */
+      .layout.no-nav {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          'header'
+          'main'
+          'footer';
+        .nav {
+          display: none;
         }
       }
     `,
