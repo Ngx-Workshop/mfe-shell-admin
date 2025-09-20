@@ -8,6 +8,7 @@ import type {
   StructuralOverridesDto,
   StructuralSubType,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
+import { NgxNavigationalListService } from '@tmdjr/ngx-navigational-list';
 import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
 import { BehaviorSubject, map, tap } from 'rxjs';
 
@@ -19,6 +20,7 @@ export function toSlug(value: string): string {
 export class MfeRegistryService {
   http = inject(HttpClient);
   localStorageBrokerService = inject(LocalStorageBrokerService);
+  ngxNavigationalListService = inject(NgxNavigationalListService);
 
   remotes = new BehaviorSubject<MfeRemoteDto[]>([]);
   remotes$ = this.remotes.asObservable();
@@ -129,6 +131,11 @@ export class MfeRegistryService {
   registerUserJourneyRoutes(router: Router, staticRoutes: Routes = []): void {
     this.buildUserJourneyRoutes().then((dynamic) => {
       router.resetConfig([...staticRoutes, ...dynamic]);
+
+      // NgxNavigationalListService
+      this.ngxNavigationalListService.userJourneyRemotes.next(
+        this.remotes.value.filter((r) => r.type === 'user-journey')
+      );
 
       console.log(
         '%c[MFE REGISTRY] Registered dynamic routes:',
