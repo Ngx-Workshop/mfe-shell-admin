@@ -29,14 +29,14 @@ import { MfeRegistryService } from './services/mfe-registry.service';
         <ngx-structural-mfe
           class="nav-mfe"
           [mfeRemoteUrl]="vm.navigationMfeRemoteUrl ?? ''"
-          [mode]="vm.modes.nav ?? 'verbose'"
+          [mode]="vm.modes.nav ?? 'disabled'"
         ></ngx-structural-mfe>
       </aside>
 
       <header>
         <ngx-structural-mfe
           [mfeRemoteUrl]="vm.headerMfeRemoteUrl ?? ''"
-          [mode]="vm.modes.header ?? 'full'"
+          [mode]="vm.modes.header ?? 'disabled'"
         ></ngx-structural-mfe>
       </header>
 
@@ -47,7 +47,7 @@ import { MfeRegistryService } from './services/mfe-registry.service';
       <footer>
         <ngx-structural-mfe
           [mfeRemoteUrl]="vm.footerMfeRemoteUrl ?? ''"
-          [mode]="vm.modes.footer ?? 'full'"
+          [mode]="vm.modes.footer ?? 'disabled'"
         ></ngx-structural-mfe>
       </footer>
     </div>
