@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router, Routes } from '@angular/router';
 import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
-import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, tap } from 'rxjs';
 
 import { LocalStorageBrokerService } from '@tmdjr/ngx-local-storage-client';
 import type {
@@ -49,9 +49,7 @@ export class MfeRegistryService {
   // Helper method to get remote URL by structural sub type
   private getRemoteUrlBySubType(subType: StructuralSubType) {
     return this.remotes$.pipe(
-      switchMap((remotes) =>
-        from(this.mergeOverrideRemotesURLsFromLocalStorage(remotes))
-      ),
+      map((remotes) => this.mergeOverrideRemotesURLsFromLocalStorage(remotes)),
       map(
         (remotes) =>
           remotes.find((remote) => remote.structuralSubType === subType)
@@ -60,26 +58,14 @@ export class MfeRegistryService {
     );
   }
 
-  private async mergeOverrideRemotesURLsFromLocalStorage(
+  private mergeOverrideRemotesURLsFromLocalStorage(
     remotes: MfeRemoteDto[]
-  ): Promise<MfeRemoteDto[]> {
-    const updatedRemotes = await Promise.all(
-      remotes.map(async (remote) => {
-        const remoteEntryUrl = await this.localStorageBrokerService.getItem(
-          remote._id
-        );
-
-        const test = structuredClone({ ...remote, remoteEntryUrl });
-        console.log(
-          `%c[MFE REGISTRY] Merging remoteEntryUrl override for ${remote.name} from localStorage key ${remote._id}:`,
-          'color: orange; font-weight: bold;',
-          remoteEntryUrl,
-          test
-        );
-
-        return remoteEntryUrl ? { ...remote, remoteEntryUrl } : remote;
-      })
-    );
+  ): MfeRemoteDto[] {
+    const updatedRemotes = remotes.map((remote) => {
+      const localStorageKey = `mfe-remotes:${remote._id}`;
+      const remoteEntryUrl = localStorage.getItem(localStorageKey);
+      return remoteEntryUrl ? { ...remote, remoteEntryUrl } : remote;
+    });
     return updatedRemotes;
   }
 
@@ -111,10 +97,7 @@ export class MfeRegistryService {
       'color: blue; font-weight: bold;',
       this.remotes.value
     );
-    const merged = await this.mergeOverrideRemotesURLsFromLocalStorage(
-      this.remotes.value
-    );
-    return merged
+    return this.mergeOverrideRemotesURLsFromLocalStorage(this.remotes.value)
       .filter((r) => r.type === 'user-journey')
       .map((r) => ({
         path: toSlug(r.name),
