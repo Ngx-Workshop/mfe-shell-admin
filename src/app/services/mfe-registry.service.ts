@@ -94,7 +94,9 @@ export class MfeRegistryService {
   // Called during provideAppInitializer
   loadMfeRemotes() {
     return this.http.get<MfeRemoteDto[]>('/api/mfe-remotes').pipe(
-      map((remotes) => remotes.filter((r) => r.isAdmin)),
+      map((remotes) =>
+        remotes.filter((r) => r.isAdmin || r.type === 'structural')
+      ),
       tap((remotes) => this.remotes.next(remotes))
     );
   }

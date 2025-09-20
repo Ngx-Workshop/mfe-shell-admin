@@ -1,8 +1,16 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { RouterOutlet } from '@angular/router';
-import { NavBar } from './components/nav-bar';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
+import { combineLatest, filter } from 'rxjs';
+import { StructuralMfeComponent } from './components/structural-mfe';
 import { MfeRegistryService } from './services/mfe-registry.service';
 
 @Component({
@@ -13,15 +21,36 @@ import { MfeRegistryService } from './services/mfe-registry.service';
       useValue: { appearance: 'outline' },
     },
   ],
-  imports: [NavBar, RouterOutlet, AsyncPipe],
+  imports: [RouterOutlet, MatButtonModule, AsyncPipe, StructuralMfeComponent],
   template: `
     @if(viewModel$ | async; as vm) {
-    <ngx-nav-bar></ngx-nav-bar>
-    <main>
-      <router-outlet></router-outlet>
-    </main>
-    } @else {
-    <p>Loading...</p>
+    <div class="layout" [class.no-nav]="vm.modes.nav === 'disabled'">
+      <aside class="nav">
+        <ngx-structural-mfe
+          class="nav-mfe"
+          [mfeRemoteUrl]="vm.navigationMfeRemoteUrl ?? ''"
+          [mode]="vm.modes.nav ?? 'verbose'"
+        ></ngx-structural-mfe>
+      </aside>
+
+      <header>
+        <ngx-structural-mfe
+          [mfeRemoteUrl]="vm.headerMfeRemoteUrl ?? ''"
+          [mode]="vm.modes.header ?? 'full'"
+        ></ngx-structural-mfe>
+      </header>
+
+      <main>
+        <router-outlet />
+      </main>
+
+      <footer>
+        <ngx-structural-mfe
+          [mfeRemoteUrl]="vm.footerMfeRemoteUrl ?? ''"
+          [mode]="vm.modes.footer ?? 'full'"
+        ></ngx-structural-mfe>
+      </footer>
+    </div>
     }
   `,
   styles: [
@@ -40,5 +69,31 @@ import { MfeRegistryService } from './services/mfe-registry.service';
 })
 export class App {
   private registry = inject(MfeRegistryService);
-  protected viewModel$ = this.registry.userJourneyRemotes$;
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  protected viewModel$ = combineLatest({
+    userJourneyRemotes: this.registry.userJourneyRemotes$,
+    headerMfeRemoteUrl: this.registry.headerRemoteUrl$,
+    footerMfeRemoteUrl: this.registry.footerRemoteUrl$,
+    navigationMfeRemoteUrl: this.registry.navigationRemoteUrl$,
+    modes: this.registry.structuralModes$,
+  });
+
+  constructor() {
+    this.router.events
+      .pipe(
+        takeUntilDestroyed(),
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd)
+      )
+      .subscribe(() => {
+        // find deepest active route
+        let current = this.route.firstChild;
+        while (current && current.firstChild) {
+          current = current.firstChild;
+        }
+        const overrides = current?.snapshot.data?.['structuralOverrides'];
+        this.registry.setStructuralMode(overrides ? overrides : {});
+      });
+  }
 }
