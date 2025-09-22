@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
 
-@include mat.all-component-densities(-1); // Applies density to all components
+// @include mat.all-component-densities(-1); // Applies density to all components
 
 html,
 body {
