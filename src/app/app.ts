@@ -63,8 +63,6 @@ import { MfeRegistryService } from './services/mfe-registry.service';
           'nav header'
           'nav main'
           'nav footer';
-        min-height: 100dvh;
-        height: 100dvh;
       }
       .nav {
         grid-area: nav;
