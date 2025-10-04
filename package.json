@@ -21,7 +21,7 @@
     "@angular/platform-browser": "20.1.6",
     "@angular/router": "20.1.6",
     "@tmdjr/ngx-local-storage-client": "^0.0.1",
-    "@tmdjr/ngx-user-metadata": "^0.0.6",
+    "@tmdjr/ngx-user-metadata": "^0.0.7",
     "@tmdjr/ngx-theme-picker": "0.0.2",
     "@tmdjr/ngx-navigational-list": "0.0.4",
     "rxjs": "7.8.2",
