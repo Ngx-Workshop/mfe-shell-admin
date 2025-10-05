@@ -13,7 +13,8 @@ import {
   StructuralNavOverrideMode,
   StructuralOverrideMode,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
-import { BehaviorSubject } from 'rxjs';
+import { Role } from '@tmdjr/ngx-navigational-list';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
 type StructuralMfeInputModes =
   | StructuralOverrideMode
@@ -30,17 +31,26 @@ export class StructuralMfeComponent implements OnInit {
   mfeRemoteUrl = input.required<string>();
 
   @Input()
+  set role(value: Role) {
+    this.role$.next(value);
+  }
+  role$ = new BehaviorSubject<Role>('none');
+
+  @Input()
   set mode(value: StructuralMfeInputModes) {
     this.mode$.next(value);
   }
   mode$ = new BehaviorSubject<StructuralMfeInputModes>('disabled');
 
   constructor() {
-    this.mode$.pipe(takeUntilDestroyed()).subscribe((mode) => {
-      if (this.cmpRef) {
-        this.cmpRef.setInput('mode', mode);
-      }
-    });
+    combineLatest([this.mode$, this.role$])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([mode, role]) => {
+        if (this.cmpRef) {
+          this.cmpRef.setInput('mode', mode);
+          this.cmpRef.setInput('role', role);
+        }
+      });
   }
 
   async ngOnInit() {
