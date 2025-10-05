@@ -83,7 +83,7 @@ module.exports = withModuleFederationPlugin({
     '@tmdjr/ngx-navigational-list': {
       singleton: true,
       strictVersion: true,
-      requiredVersion: '0.0.7',
+      requiredVersion: '0.0.8',
     },
   },
 });
