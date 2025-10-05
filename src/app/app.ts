@@ -10,7 +10,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { NgxUserMetadataService } from '@tmdjr/ngx-user-metadata';
-import { combineLatest, filter } from 'rxjs';
+import { combineLatest, filter, map } from 'rxjs';
 import { StructuralMfeComponent } from './components/structural-mfe';
 import { MfeRegistryService } from './services/mfe-registry.service';
 
@@ -112,7 +112,7 @@ export class App {
     footerMfeRemoteUrl: this.registry.footerRemoteUrl$,
     navigationMfeRemoteUrl: this.registry.navigationRemoteUrl$,
     modes: this.registry.structuralModes$,
-    role: this.metadata.userMetadata$,
+    role: this.metadata.userMetadata$.pipe(map((m) => m?.role)),
   });
 
   constructor() {
