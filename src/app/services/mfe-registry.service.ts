@@ -8,6 +8,7 @@ import type {
   StructuralOverridesDto,
   StructuralSubType,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
+import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
 import { BehaviorSubject, map, tap } from 'rxjs';
 
 export function toSlug(value: string): string {
@@ -100,7 +101,7 @@ export class MfeRegistryService {
       .map((r) => ({
         path: toSlug(r.name),
         data: { structuralOverrides: r.structuralOverrides },
-        // canActivate: r.requiresAuth ? [userAuthenticatedGuard] : [],
+        canActivate: r.requiresAuth ? [userAuthenticatedGuard] : [],
         // Load either component or routes based on `useRoutes` flag
         loadComponent: !r.useRoutes
           ? () =>
