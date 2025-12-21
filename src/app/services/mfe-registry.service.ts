@@ -8,7 +8,6 @@ import type {
   StructuralOverridesDto,
   StructuralSubType,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
-import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
 import { BehaviorSubject, map, tap } from 'rxjs';
 
 export function toSlug(value: string): string {
@@ -93,7 +92,7 @@ export class MfeRegistryService {
   async buildUserJourneyRoutes(): Promise<Routes> {
     console.log(
       '%c[MFE REGISTRY] Building user-journey routes from remotes:',
-      'color: blue; font-weight: bold;',
+      'color: salmon; font-weight: bold;',
       this.remotes.value
     );
     return this.mergeOverrideRemotesURLsFromLocalStorage(this.remotes.value)
@@ -101,7 +100,7 @@ export class MfeRegistryService {
       .map((r) => ({
         path: toSlug(r.name),
         data: { structuralOverrides: r.structuralOverrides },
-        canActivate: r.requiresAuth ? [userAuthenticatedGuard] : [],
+        // canActivate: r.requiresAuth ? [userAuthenticatedGuard] : [],
         // Load either component or routes based on `useRoutes` flag
         loadComponent: !r.useRoutes
           ? () =>
