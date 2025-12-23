@@ -71,7 +71,7 @@ module.exports = withModuleFederationPlugin({
     '@tmdjr/ngx-user-metadata': {
       singleton: true,
       strictVersion: true,
-      requiredVersion: '^0.0.10',
+      requiredVersion: '^0.0.11',
     },
 
     '@tmdjr/ngx-local-storage-client': {
