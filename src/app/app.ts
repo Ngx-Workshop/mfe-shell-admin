@@ -128,6 +128,7 @@ export class App {
           current = current.firstChild;
         }
         const overrides = current?.snapshot.data?.['structuralOverrides'];
+        console.log(current?.snapshot.data);
         this.registry.setStructuralMode(overrides ? overrides : {});
       });
   }
