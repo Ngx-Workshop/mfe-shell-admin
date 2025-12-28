@@ -124,9 +124,9 @@ export class App {
       .subscribe(() => {
         // find deepest active route
         let current = this.route.firstChild;
-        while (current && current.firstChild) {
-          current = current.firstChild;
-        }
+        // while (current && current.firstChild) {
+        //   current = current.firstChild;
+        // }
         const overrides = current?.snapshot.data?.['structuralOverrides'];
         console.log(current?.snapshot.data);
         this.registry.setStructuralMode(overrides ? overrides : {});
