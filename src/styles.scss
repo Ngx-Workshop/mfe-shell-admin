@@ -133,6 +133,9 @@ body {
 .mfe-preview.cdk-overlay-pane.mat-mdc-dialog-panel {
   max-width: 90vw;
 }
+.solid-dialog-backdrop {
+  background: var(--mat-sys-background);
+}
 
 .flex-spacer {
   flex-grow: 1;
