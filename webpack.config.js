@@ -91,5 +91,29 @@ module.exports = withModuleFederationPlugin({
       strictVersion: true,
       requiredVersion: '20.1.3',
     },
+
+    '@tmdjr/ngx-editor-js2-blockquotes': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '^20.1.1',
+    },
+
+    '@tmdjr/ngx-editor-js2-codemirror': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '^20.1.1',
+    },
+
+    '@tmdjr/ngx-editor-js2-image': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '^20.1.1',
+    },
+
+    '@tmdjr/ngx-editor-js2-pop-quiz': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '^20.1.1',
+    },
   },
 });
