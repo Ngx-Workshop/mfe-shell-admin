@@ -23,6 +23,12 @@ import { routes } from './app.routes';
 import { MfeRegistryService } from './services/mfe-registry.service';
 import { NavigationalListService } from './services/navigational-list.service';
 
+import { NGX_EDITORJS_OPTIONS } from '@tmdjr/ngx-editor-js2';
+import { NgxEditorJs2BlockquotesComponent } from '@tmdjr/ngx-editor-js2-blockquotes';
+import { NgxEditorJs2CodemirrorComponent } from '@tmdjr/ngx-editor-js2-codemirror';
+import { NgxEditorJs2ImageComponent } from '@tmdjr/ngx-editor-js2-image';
+import { NgxEditorJs2PopQuizComponent } from '@tmdjr/ngx-editor-js2-pop-quiz';
+
 function initializerFn() {
   const mfeRegistryService = inject(MfeRegistryService);
   const navigationalListService = inject(NavigationalListService);
@@ -67,6 +73,33 @@ export const appConfig: ApplicationConfig = {
       provide: NGX_USER_METADATA_CONFIG,
       useValue: {
         redirectUrl: 'https://auth.ngx-workshop.io/',
+      },
+    },
+    {
+      provide: NGX_EDITORJS_OPTIONS,
+      useValue: {
+        consumerSupportedBlocks: [
+          {
+            name: 'Image',
+            component: NgxEditorJs2ImageComponent,
+            componentInstanceName: 'NgxEditorJs2ImageComponent',
+          },
+          {
+            name: 'Blockquote',
+            component: NgxEditorJs2BlockquotesComponent,
+            componentInstanceName: 'NgxEditorJs2BlockquotesComponent',
+          },
+          {
+            name: 'Codemirror',
+            component: NgxEditorJs2CodemirrorComponent,
+            componentInstanceName: 'NgxEditorJs2CodemirrorComponent',
+          },
+          {
+            name: 'Pop Quiz',
+            component: NgxEditorJs2PopQuizComponent,
+            componentInstanceName: 'NgxEditorJs2PopQuizComponent',
+          },
+        ],
       },
     },
   ],

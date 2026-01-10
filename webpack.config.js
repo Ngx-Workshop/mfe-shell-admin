@@ -89,7 +89,7 @@ module.exports = withModuleFederationPlugin({
     '@tmdjr/ngx-editor-js2': {
       singleton: true,
       strictVersion: true,
-      requiredVersion: '0.0.20',
+      requiredVersion: '20.1.3',
     },
   },
 });
