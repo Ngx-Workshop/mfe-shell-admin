@@ -20,6 +20,7 @@
     "@angular/material": "20.1.5",
     "@angular/platform-browser": "20.1.6",
     "@angular/router": "20.1.6",
+    "@tmdjr/ngx-editor-js2": "^20.0.0",
     "@tmdjr/ngx-local-storage-client": "^0.0.1",
     "@tmdjr/ngx-user-metadata": "^0.0.11",
     "@tmdjr/ngx-theme-picker": "0.0.2",
