@@ -37,18 +37,6 @@ module.exports = withModuleFederationPlugin({
       requiredVersion: '20.1.6',
     },
 
-    '@angular/core/rxjs-interop': {
-      singleton: true,
-      strictVersion: true,
-      requiredVersion: '20.1.6',
-    },
-
-    '@angular/core/primitives/signals': {
-      singleton: true,
-      strictVersion: true,
-      requiredVersion: '20.1.6',
-    },
-
     // If you use Material/CDK, share them too
     '@angular/cdk': {
       singleton: true,
@@ -102,30 +90,6 @@ module.exports = withModuleFederationPlugin({
       singleton: true,
       strictVersion: true,
       requiredVersion: '20.1.3',
-    },
-
-    '@tmdjr/ngx-editor-js2-blockquotes': {
-      singleton: true,
-      strictVersion: true,
-      requiredVersion: '^20.1.1',
-    },
-
-    '@tmdjr/ngx-editor-js2-codemirror': {
-      singleton: true,
-      strictVersion: true,
-      requiredVersion: '^20.1.1',
-    },
-
-    '@tmdjr/ngx-editor-js2-image': {
-      singleton: true,
-      strictVersion: true,
-      requiredVersion: '^20.1.1',
-    },
-
-    '@tmdjr/ngx-editor-js2-pop-quiz': {
-      singleton: true,
-      strictVersion: true,
-      requiredVersion: '^20.1.1',
     },
   },
 });
