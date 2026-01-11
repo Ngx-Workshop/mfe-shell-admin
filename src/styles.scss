@@ -295,3 +295,8 @@ body {
   line-height: 32px;
   letter-spacing: 0.5px;
 }
+
+.blur-backdrop {
+  background-color: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(6px);
+}
