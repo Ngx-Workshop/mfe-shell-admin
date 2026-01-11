@@ -37,6 +37,18 @@ module.exports = withModuleFederationPlugin({
       requiredVersion: '20.1.6',
     },
 
+    '@angular/core/rxjs-interop': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '20.1.6',
+    },
+
+    '@angular/core/primitives/signals': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '20.1.6',
+    },
+
     // If you use Material/CDK, share them too
     '@angular/cdk': {
       singleton: true,
