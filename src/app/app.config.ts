@@ -23,6 +23,7 @@ import { routes } from './app.routes';
 import { MfeRegistryService } from './services/mfe-registry.service';
 import { NavigationalListService } from './services/navigational-list.service';
 
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { NGX_EDITORJS_OPTIONS } from '@tmdjr/ngx-editor-js2';
 import { NgxEditorJs2BlockquotesComponent } from '@tmdjr/ngx-editor-js2-blockquotes';
 import { NgxEditorJs2CodemirrorComponent } from '@tmdjr/ngx-editor-js2-codemirror';
@@ -73,6 +74,12 @@ export const appConfig: ApplicationConfig = {
       provide: NGX_USER_METADATA_CONFIG,
       useValue: {
         redirectUrl: 'https://auth.ngx-workshop.io/',
+      },
+    },
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        backdropClass: 'blur-backdrop',
       },
     },
     {
