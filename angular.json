@@ -21,6 +21,18 @@
           "options": {
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/@tmdjr/ngx-editor-js2/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-blockquotes/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-codemirror/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-pop-quiz/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-image/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-mfe-loader/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-mermaidjs/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-panel/styles"
+              ]
+            },
             "assets": [
               {
                 "glob": "**/*",
@@ -89,6 +101,18 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/@tmdjr/ngx-editor-js2/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-blockquotes/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-codemirror/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-pop-quiz/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-image/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-mfe-loader/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-mermaidjs/styles",
+                "node_modules/@tmdjr/ngx-editor-js2-panel/styles"
+              ]
+            },
             "assets": [
               {
                 "glob": "**/*",
