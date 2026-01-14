@@ -16,6 +16,7 @@
 @use 'ngx-editor-js2-panel-drag-preview.scss';
 
 // @include mat.all-component-densities(-1); // Applies density to all components
+.cdk-drag-preview,
 .ngx-editor-js2-tokens {
   --mat-sys-body-large: 400 1.25rem / 1.75rem Roboto;
   --mat-sys-body-large-font: Roboto;
