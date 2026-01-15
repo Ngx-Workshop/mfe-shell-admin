@@ -237,6 +237,20 @@ body {
       container-max-width: 700px,
     )
   );
+  .snackbar-success {
+    @include mat.snack-bar-overrides(
+      (
+        container-color: green,
+      )
+    );
+  }
+  .snackbar-failure {
+    @include mat.snack-bar-overrides(
+      (
+        container-color: red,
+      )
+    );
+  }
 }
 
 /* Specific dialog styles */
