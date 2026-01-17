@@ -20,7 +20,7 @@
     "@angular/material": "20.1.5",
     "@angular/platform-browser": "20.1.6",
     "@angular/router": "20.1.6",
-    "@tmdjr/ngx-editor-js2": "^20.3.0",
+    "@tmdjr/ngx-editor-js2": "^20.3.2",
     "@tmdjr/ngx-editor-js2-blockquotes": "^20.1.1",
     "@tmdjr/ngx-editor-js2-codemirror": "^20.1.1",
     "@tmdjr/ngx-editor-js2-image": "^20.1.1",
