@@ -293,3 +293,27 @@ body {
   background-color: rgba(0, 0, 0, 0.32);
   backdrop-filter: blur(6px);
 }
+
+/* styles.scss */
+
+/* optional: define your own keyframes */
+@keyframes route-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes route-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Fade the whole "root" transition */
+::view-transition-old(root) {
+  animation: route-fade-out 180ms ease-out both;
+}
+
+::view-transition-new(root) {
+  animation: route-fade-in 180ms ease-in both;
+}

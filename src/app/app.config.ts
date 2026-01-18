@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withViewTransitions } from '@angular/router';
 import { NGX_EDITORJS_OPTIONS } from '@tmdjr/ngx-editor-js2';
 import { NgxEditorJs2BlockquotesComponent } from '@tmdjr/ngx-editor-js2-blockquotes';
 import { NgxEditorJs2CodemirrorComponent } from '@tmdjr/ngx-editor-js2-codemirror';
@@ -63,7 +63,12 @@ export const appConfig: ApplicationConfig = {
     ),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withViewTransitions({
+        // optional: you can add logic here later (skip transitions for query/fragment-only changes)
+      })
+    ),
     ...provideLocalStorageBroker({
       iframeUrl:
         'https://beta.ngx-workshop.io/assets/ngx-broker/ngx-local-storage-broker.html',
