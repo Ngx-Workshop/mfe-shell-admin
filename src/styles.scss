@@ -310,10 +310,10 @@ body {
 }
 
 /* Fade the whole "root" transition */
-::view-transition-old(root) {
-  animation: route-fade-out 180ms ease-out both;
-}
+// ::view-transition-old(root) {
+//   animation: route-fade-out 180ms ease-out both;
+// }
 
-::view-transition-new(root) {
-  animation: route-fade-in 180ms ease-in both;
-}
+// ::view-transition-new(root) {
+//   animation: route-fade-in 180ms ease-in both;
+// }
