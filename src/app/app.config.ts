@@ -126,5 +126,11 @@ export const appConfig: ApplicationConfig = {
         ],
       },
     },
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        backdropClass: 'blur-backdrop',
+      },
+    },
   ],
 };
