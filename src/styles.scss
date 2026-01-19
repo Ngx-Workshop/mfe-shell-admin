@@ -337,12 +337,25 @@ body {
   }
 }
 
-.page-item.cdk-drag-placeholder,
-.page-item.cdk-drag-placeholder {
+.page-list .cdk-drag-placeholder,
+.category-list .cdk-drag-placeholder {
   opacity: 0;
 }
 
+.page-list .cdk-drag-placeholder,
+.category-list .cdk-drag-placeholder {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Animate the *other* items while a drag is happening */
+.page-list.cdk-drop-list-dragging .page-item:not(.cdk-drag-placeholder),
+.category-list.cdk-drop-list-dragging
+  .category-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Animate the dragged item when it drops */
 .page-item.cdk-drag-animating,
-.page-item.cdk-drag-animating {
+.category-item.cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
