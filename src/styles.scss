@@ -320,6 +320,7 @@ body {
 
 .page-item.cdk-drag-preview,
 .category-item.cdk-drag-preview {
+  text-decoration: none;
   background: var(--mat-sys-primary);
   border-radius: var(
     --mat-list-active-indicator-shape,
@@ -328,7 +329,8 @@ body {
   .mat-list-item-content {
     color: var(--mat-sys-on-primary);
     display: flex;
-    flex-direction: row;
+    margin: 8px 12px;
+    align-items: center;
   }
   .flex-spacer {
     flex-grow: 1;
