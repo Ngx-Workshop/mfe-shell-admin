@@ -25,7 +25,7 @@
     "@tmdjr/ngx-editor-js2-codemirror": "^21.0.1",
     "@tmdjr/ngx-editor-js2-image": "^21.0.1",
     "@tmdjr/ngx-editor-js2-pop-quiz": "^21.0.1",
-    "@tmdjr/ngx-editor-js2-mfe-loader": "^21.0.1",
+    "@tmdjr/ngx-editor-js2-mfe-loader": "^21.0.2",
     "@tmdjr/ngx-editor-js2-mermaidjs": "^21.0.1",
     "@tmdjr/ngx-editor-js2-panel": "^21.0.1",
     "@tmdjr/ngx-local-storage-client": "^21.0.30",
