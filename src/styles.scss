@@ -1,11 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
 
-// ! CODEMIRROR Dependencies
-@use 'codemirror/lib/codemirror';
-@use 'codemirror/theme/material-palenight';
-// ! END CODEMIRROR Dependencies
-
 @use 'drag-preview';
 @use 'ngx-editor-js2-blockquotes-drag-preview.scss';
 @use 'ngx-editor-js2-codemirror-drag-preview.scss';
@@ -18,11 +13,13 @@
 // @include mat.all-component-densities(-1); // Applies density to all components
 
 .cm-editor {
-  font-family: Cascadia Code, Fira Code, Menlo, Monaco, 'Courier New', monospace;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 32px;
-  letter-spacing: 0.5px;
+  font-size: 1rem;
+}
+
+.cm-content {
+  font-family: 'JetBrains Mono', 'Victor Mono', ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, monospace;
+  font-variant-ligatures: contextual;
 }
 
 .ngx-editor-js2-block.cdk-drag-preview,
