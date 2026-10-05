@@ -13,6 +13,7 @@ import {
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, Router, withViewTransitions } from '@angular/router';
+import { provideAssetManager } from '@tmdjr/ngx-asset-manager';
 import { NGX_EDITORJS_OPTIONS } from '@tmdjr/ngx-editor-js2';
 import { NgxEditorJs2BlockquotesComponent } from '@tmdjr/ngx-editor-js2-blockquotes';
 import { NgxEditorJs2CodemirrorComponent } from '@tmdjr/ngx-editor-js2-codemirror';
@@ -61,6 +62,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptorsFromDi(),
       withInterceptors([authInterceptor])
     ),
+    provideAssetManager({ apiUrl: '/api/uploader' }),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(
