@@ -11,6 +11,7 @@ import {
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MatIconRegistry } from '@angular/material/icon';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, Router, withViewTransitions } from '@angular/router';
 import { provideAssetManager } from '@tmdjr/ngx-asset-manager';
@@ -56,6 +57,12 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(initializerFn),
     provideAppInitializer(() => {
       inject(ThemePickerService);
+    }),
+    provideAppInitializer(() => {
+      inject(MatIconRegistry).setDefaultFontSetClass(
+        'material-symbols-outlined',
+        'mat-ligature-font'
+      );
     }),
     provideAnimations(),
     provideHttpClient(
