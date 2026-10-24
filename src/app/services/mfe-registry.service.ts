@@ -93,9 +93,13 @@ export class MfeRegistryService {
    * Path = slug(name), remoteEntry = remoteEntryUrl
    */
   async buildUserJourneyRoutes(): Promise<Routes> {
-    this.logger.info('MFE REGISTRY', {
+    this.logger.info('MfeRegistryService', {
       message: 'Building dynamic routes from remotes',
-      data: this.remotes.value,
+      data: this.remotes.value.map((r) => ({
+        Name: r.name,
+        'Remote Entry': r.remoteEntryUrl,
+        Id: r._id,
+      })),
     });
     return this.mergeOverrideRemotesURLsFromLocalStorage(this.remotes.value)
       .filter((r) => r.type === 'user-journey')
@@ -131,9 +135,13 @@ export class MfeRegistryService {
     this.buildUserJourneyRoutes().then((dynamic) => {
       router.resetConfig([...staticRoutes, ...dynamic]);
 
-      this.logger.info('MFE REGISTRY', {
+      this.logger.info('MfeRegistryService', {
         message: 'Registered dynamic routes',
-        data: dynamic,
+        data: dynamic.map((r) => ({
+          Route: r.path,
+          ...((r.data?.['structuralOverrides'] ??
+            {}) as StructuralOverridesDto),
+        })),
       });
     });
   }

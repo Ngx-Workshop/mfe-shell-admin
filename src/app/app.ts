@@ -131,7 +131,7 @@ export class App {
         // }
         const overrides = current?.snapshot.data?.['structuralOverrides'];
         this.logger.info('App', {
-          message: 'Context data loaded',
+          message: 'Settting structural overrides',
           data: current?.snapshot.data,
         });
         this.registry.setStructuralMode(overrides ? overrides : {});
