@@ -111,5 +111,10 @@ module.exports = withModuleFederationPlugin({
       strictVersion: true,
       requiredVersion: '21.1.0',
     },
+    '@tmdjr/ngx-workshop-logger': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '0.1.0',
+    },
   },
 });

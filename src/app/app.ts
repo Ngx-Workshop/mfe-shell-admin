@@ -10,6 +10,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { NgxUserMetadataService } from '@tmdjr/ngx-user-metadata';
+import { WorkshopLogger } from '@tmdjr/ngx-workshop-logger';
 import { combineLatest, filter, map } from 'rxjs';
 import { StructuralMfeComponent } from './components/structural-mfe';
 import { MfeRegistryService } from './services/mfe-registry.service';
@@ -105,6 +106,7 @@ export class App {
   private registry = inject(MfeRegistryService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private readonly logger = inject(WorkshopLogger);
 
   protected viewModel$ = combineLatest({
     userJourneyRemotes: this.registry.userJourneyRemotes$,
@@ -128,7 +130,10 @@ export class App {
         //   current = current.firstChild;
         // }
         const overrides = current?.snapshot.data?.['structuralOverrides'];
-        console.log(current?.snapshot.data);
+        this.logger.info('App', {
+          message: 'Context data loaded',
+          data: current?.snapshot.data,
+        });
         this.registry.setStructuralMode(overrides ? overrides : {});
       });
   }

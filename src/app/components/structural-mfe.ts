@@ -14,6 +14,7 @@ import {
   StructuralOverrideMode,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 import { Role } from '@tmdjr/ngx-navigational-list';
+import { WorkshopLogger } from '@tmdjr/ngx-workshop-logger';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
 type StructuralMfeInputModes =
@@ -25,6 +26,7 @@ type StructuralMfeInputModes =
   template: ``,
 })
 export class StructuralMfeComponent implements OnInit {
+  private readonly logger = inject(WorkshopLogger);
   protected viewContainer = inject(ViewContainerRef);
   protected cmpRef?: ComponentRef<any>;
 
@@ -62,8 +64,15 @@ export class StructuralMfeComponent implements OnInit {
       });
       this.cmpRef = this.viewContainer.createComponent(remoteComponent.default);
       this.cmpRef.setInput('mode', this.mode$.value);
+      this.logger.info('StructuralMfeComponent', {
+        message: `Built structural component ${this.cmpRef.instance.constructor.name}`,
+        data: this.cmpRef,
+      });
     } catch (error) {
-      console.error('[MFE LOAD ERROR]', error);
+      this.logger.error('StructuralMfeComponent', {
+        message: `Building structural component ${this.mfeRemoteUrl()}`,
+        data: error,
+      });
     }
   }
 }

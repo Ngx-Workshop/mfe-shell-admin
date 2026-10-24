@@ -9,6 +9,7 @@ import type {
   StructuralSubType,
 } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 import { userAuthenticatedGuard } from '@tmdjr/ngx-user-metadata';
+import { WorkshopLogger } from '@tmdjr/ngx-workshop-logger';
 import { BehaviorSubject, map, tap } from 'rxjs';
 
 export function toSlug(value: string): string {
@@ -19,6 +20,7 @@ export function toSlug(value: string): string {
 export class MfeRegistryService {
   http = inject(HttpClient);
   localStorageBrokerService = inject(LocalStorageBrokerService);
+  private readonly logger = inject(WorkshopLogger);
 
   remotes = new BehaviorSubject<MfeRemoteDto[]>([]);
   remotes$ = this.remotes.asObservable();
@@ -91,11 +93,10 @@ export class MfeRegistryService {
    * Path = slug(name), remoteEntry = remoteEntryUrl
    */
   async buildUserJourneyRoutes(): Promise<Routes> {
-    console.log(
-      '%c[MFE REGISTRY] Building user-journey routes from remotes:',
-      'color: salmon; font-weight: bold;',
-      this.remotes.value
-    );
+    this.logger.info('MFE REGISTRY', {
+      message: 'Building dynamic routes from remotes',
+      data: this.remotes.value,
+    });
     return this.mergeOverrideRemotesURLsFromLocalStorage(this.remotes.value)
       .filter((r) => r.type === 'user-journey')
       .map((r) => ({
@@ -130,11 +131,10 @@ export class MfeRegistryService {
     this.buildUserJourneyRoutes().then((dynamic) => {
       router.resetConfig([...staticRoutes, ...dynamic]);
 
-      console.log(
-        '%c[MFE REGISTRY] Registered dynamic routes:',
-        'color: green; font-weight: bold;',
-        dynamic
-      );
+      this.logger.info('MFE REGISTRY', {
+        message: 'Registered dynamic routes',
+        data: dynamic,
+      });
     });
   }
 }
