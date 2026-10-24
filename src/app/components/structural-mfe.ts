@@ -65,8 +65,7 @@ export class StructuralMfeComponent implements OnInit {
       this.cmpRef = this.viewContainer.createComponent(remoteComponent.default);
       this.cmpRef.setInput('mode', this.mode$.value);
       this.logger.info('StructuralMfeComponent', {
-        message: `Built structural component ${this.cmpRef.instance.constructor.name}`,
-        data: this.cmpRef,
+        message: `Built structural component ${this.cmpRef.instance.subtype}`,
       });
     } catch (error) {
       this.logger.error('StructuralMfeComponent', {
