@@ -65,11 +65,16 @@ export class StructuralMfeComponent implements OnInit {
       this.cmpRef = this.viewContainer.createComponent(remoteComponent.default);
       this.cmpRef.setInput('mode', this.mode$.value);
       this.logger.info('StructuralMfeComponent', {
-        message: `Added structural component ${this.cmpRef.instance.subtype}`,
+        message: 'New structural component',
+        data: {
+          mode: this.mode$.value,
+          role: this.role$.value,
+          subtype: this.cmpRef?.instance.subtype,
+        },
       });
     } catch (error) {
       this.logger.error('StructuralMfeComponent', {
-        message: `Adding structural component ${this.mfeRemoteUrl()}`,
+        message: `Structural component ${this.mfeRemoteUrl()}`,
         data: error,
       });
     }

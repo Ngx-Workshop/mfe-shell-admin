@@ -114,7 +114,13 @@ export class MfeRegistryService {
                 type: 'module',
                 remoteEntry: r.remoteEntryUrl,
                 exposedModule: './Component',
-              }).then((m) => m.App)
+              }).then((m) => {
+                this.logger.warning('MfeRegistryService', {
+                  message: `Loading remote component for ${r.name}`,
+                  data: m.App,
+                });
+                return m.App;
+              })
           : undefined,
         loadChildren: r.useRoutes
           ? () =>
