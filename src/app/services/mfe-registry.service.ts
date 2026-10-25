@@ -128,7 +128,13 @@ export class MfeRegistryService {
                 type: 'module',
                 remoteEntry: r.remoteEntryUrl,
                 exposedModule: './Routes',
-              }).then((m) => m.Routes)
+              }).then((m) => {
+                this.logger.warning('MfeRegistryService', {
+                  message: `Loading remote routes for ${r.name}`,
+                  data: m.Routes,
+                });
+                return m.Routes;
+              })
           : undefined,
       }));
   }
