@@ -4,6 +4,15 @@ Administrative interface for managing Ngx-Workshop.io
 
 Testing build to delete the dist folder before building
 
+## Build toolchain compatibility
+
+Keep `@angular-devkit/build-angular` pinned to `21.2.26` and the npm webpack
+override at `5.105.2`. Builder `21.2.28` uses webpack `5.112.0`, whose federation
+identifiers break `license-webpack-plugin@4.0.2` with an undefined `trim` error.
+Both pins keep one compatible webpack runtime. Keep license extraction enabled.
+Regenerate the lockfile with CI's Node 22/npm 10, then verify with `npm ci`;
+npm 11 can omit optional peer entries required by npm 10.
+
 ## Material Symbols in federated components
 
 The shell loads Material Symbols Outlined in `src/index.html` and sets
