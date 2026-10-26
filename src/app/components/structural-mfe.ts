@@ -57,14 +57,19 @@ export class StructuralMfeComponent implements OnInit {
 
   async ngOnInit() {
     try {
+      console.log('Loading remote module from URL:', this.mfeRemoteUrl());
       const remoteComponent = await loadRemoteModule({
         type: 'module',
         remoteEntry: this.mfeRemoteUrl(),
         exposedModule: './Component',
       });
+      console.log('1');
       this.cmpRef = this.viewContainer.createComponent(remoteComponent.default);
+      console.log('2');
       this.cmpRef.setInput('role', this.role$.value);
+      console.log('3');
       this.cmpRef.setInput('mode', this.mode$.value);
+      console.log('4');
       this.logger.warning('StructuralMfeComponent', {
         message: `New structural component${
           this.cmpRef?.instance.subtype ?? 'UNKNOWN'
