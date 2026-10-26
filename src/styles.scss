@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
+@use '@tmdjr/ngx-workshop-design-system/theme' as ngx;
 
 @use 'drag-preview';
 @use 'ngx-editor-js2-blockquotes-drag-preview.scss';
@@ -9,6 +10,46 @@
 @use 'ngx-editor-js2-mfe-loader-drag-preview.scss';
 @use 'ngx-editor-js2-mermaidjs-drag-preview.scss';
 @use 'ngx-editor-js2-panel-drag-preview.scss';
+
+// Supply shared assets once; migrate Material tokens per workspace while legacy
+// remotes continue to use the existing body palette selected by the theme picker.
+@include ngx.button-styles();
+@include ngx.code-styles();
+
+:root {
+  @include ngx.tokens();
+}
+
+.ngx-design-system,
+.ngx-design-system-overlay {
+  @include ngx.material-adapter();
+  color-scheme: dark;
+  color: var(--ngx-color-text);
+  font-family: var(--ngx-font-body);
+
+  &, *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ngx-color-primary);
+    outline-offset: 4px;
+  }
+}
+
+// Public CDK backdrop class, scoped to migrated dialogs.
+.ngx-design-system-backdrop {
+  background: var(--ngx-overlay-backdrop-fallback);
+  @supports (backdrop-filter: blur(1px)) {
+    background: var(--ngx-overlay-backdrop-tint);
+    backdrop-filter: blur(var(--ngx-overlay-backdrop-blur))
+      saturate(var(--ngx-overlay-backdrop-saturation));
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    background: var(--ngx-overlay-backdrop-fallback);
+    backdrop-filter: none;
+  }
+}
 
 // @include mat.all-component-densities(-1); // Applies density to all components
 

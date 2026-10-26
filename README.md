@@ -2,6 +2,20 @@
 
 Administrative interface for managing Ngx-Workshop.io
 
+## Shared design system
+
+The shell installs `@tmdjr/ngx-workshop-design-system` at `21.0.1` and shares its
+JavaScript entry point as a strict singleton. Remotes must install and share the
+same version. The Sass `theme` entry is compiled by the host, not federated.
+
+Global styles provide semantic Ngx tokens plus button, code and scoped backdrop styles.
+Migrated workspaces opt into the Material adapter with the `ngx-design-system`
+host class; dialogs use `panelClass: 'ngx-design-system-overlay'` and
+`backdropClass: 'ngx-design-system-backdrop'`. Select panels and tooltips also use
+the `ngx-design-system-overlay` class. This keeps overlay tokens consistent outside
+the remote's DOM. Existing body palette rules continue to serve legacy remotes.
+Standalone migrated remotes must also load the public theme and adapter locally.
+
 Testing build to delete the dist folder before building
 
 ## Build toolchain compatibility
