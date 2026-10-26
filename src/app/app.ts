@@ -25,42 +25,56 @@ import { MfeRegistryService } from './services/mfe-registry.service';
   ],
   imports: [RouterOutlet, MatButtonModule, AsyncPipe, StructuralMfeComponent],
   template: `
-    @if(viewModel$ | async; as vm) {
-    <div class="layout" [class.no-nav]="vm.modes.nav === 'disabled'">
-      <aside class="nav">
-        <ngx-structural-mfe
-          class="nav-mfe"
-          [mfeRemoteUrl]="vm.navigationMfeRemoteUrl ?? ''"
-          [mode]="vm.modes.nav ?? 'disabled'"
-        ></ngx-structural-mfe>
-      </aside>
+    @if (viewModel$ | async; as vm) {
+      <div
+        class="layout"
+        [class.no-nav]="vm.modes.nav === 'disabled'"
+        [attr.data-nav-mode]="vm.modes.nav"
+      >
+        <aside class="nav">
+          <ngx-structural-mfe
+            class="nav-mfe"
+            [role]="vm.role ?? 'none'"
+            [mfeRemoteUrl]="vm.navigationMfeRemoteUrl ?? ''"
+            [mode]="vm.modes.nav ?? 'disabled'"
+          ></ngx-structural-mfe>
+        </aside>
 
-      <header>
-        <ngx-structural-mfe
-          [mfeRemoteUrl]="vm.headerMfeRemoteUrl ?? ''"
-          [mode]="vm.modes.header ?? 'disabled'"
-          [role]="vm.role ?? 'none'"
-        ></ngx-structural-mfe>
-      </header>
+        <header>
+          <ngx-structural-mfe
+            [mfeRemoteUrl]="vm.headerMfeRemoteUrl ?? ''"
+            [mode]="vm.modes.header ?? 'disabled'"
+            [role]="vm.role ?? 'none'"
+          ></ngx-structural-mfe>
+        </header>
 
-      <main>
-        <router-outlet />
-      </main>
+        <main>
+          <router-outlet />
+        </main>
 
-      <footer>
-        <ngx-structural-mfe
-          [mfeRemoteUrl]="vm.footerMfeRemoteUrl ?? ''"
-          [mode]="vm.modes.footer ?? 'disabled'"
-        ></ngx-structural-mfe>
-      </footer>
-    </div>
+        <footer>
+          <ngx-structural-mfe
+            [mfeRemoteUrl]="vm.footerMfeRemoteUrl ?? ''"
+            [mode]="vm.modes.footer ?? 'disabled'"
+          ></ngx-structural-mfe>
+        </footer>
+      </div>
     }
   `,
   styles: [
     `
+      .layout[data-nav-mode='full'] {
+        --ngx-rail-width: 176px;
+      }
+      .layout[data-nav-mode='relaxed'] {
+        --ngx-rail-width: 136px;
+      }
+      .layout[data-nav-mode='compact'] {
+        --ngx-rail-width: 88px;
+      }
       .layout {
         display: grid;
-        grid-template-columns: 110px 1fr;
+        grid-template-columns: var(--ngx-rail-width, 176px) minmax(0, 1fr);
         grid-template-rows: auto 1fr auto;
         grid-template-areas:
           'nav header'
@@ -69,7 +83,7 @@ import { MfeRegistryService } from './services/mfe-registry.service';
       }
       .nav {
         grid-area: nav;
-        overflow: hidden;
+        inline-size: var(--ngx-rail-width, 176px);
         position: fixed;
         top: 0;
         height: 100dvh;
@@ -83,9 +97,24 @@ import { MfeRegistryService } from './services/mfe-registry.service';
       }
       main {
         grid-area: main;
+        min-inline-size: 0;
       }
       footer {
         grid-area: footer;
+      }
+      @media (max-width: 720px) {
+        .layout {
+          grid-template-columns: minmax(0, 1fr);
+          grid-template-rows: auto auto 1fr auto;
+          grid-template-areas: 'nav' 'header' 'main' 'footer';
+          height: auto;
+          min-height: 100dvh;
+        }
+        .nav {
+          position: relative;
+          inline-size: 100%;
+          height: auto;
+        }
       }
       /* Collapse to a single-column layout when the nav MFE is hidden or not rendered */
       .layout.no-nav {

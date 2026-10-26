@@ -63,6 +63,7 @@ export class StructuralMfeComponent implements OnInit {
         exposedModule: './Component',
       });
       this.cmpRef = this.viewContainer.createComponent(remoteComponent.default);
+      this.cmpRef.setInput('role', this.role$.value);
       this.cmpRef.setInput('mode', this.mode$.value);
       this.logger.warning('StructuralMfeComponent', {
         message: `New structural component${

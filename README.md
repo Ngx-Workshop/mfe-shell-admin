@@ -62,3 +62,9 @@ provideAssetManager({ apiUrl: '/api/uploader' });
 This binds ASSET_DATA_SOURCE to AssetApiService using the host HttpClient and interceptors. /api/uploader is the same-origin gateway for service-uploader. Remotes import the components and consume the host provider; do not add a second HTTP client or demo adapter. Share @tmdjr/ngx-asset-manager as a singleton at the same 21.1.0 version in both host and remote, so they refer to the same InjectionToken. Folder inputs must be IDs, not names.
 
 The document editor's local document service on localhost:3007 is independent of this hosted asset endpoint. Serve/deploy the updated shell and refresh the browser to activate root-provider changes. Verification: 3 ChromeHeadless provider/HTTP checks and the production build pass; live use requires the updated shell.
+
+## Structural design-system integration
+
+Structural remotes opt into `.ngx-design-system`; their Material menus use `.ngx-design-system-overlay`. The shell supplies Ngx semantic tokens, button styles and the scoped Material adapter, including portaled overlays. Package version 21.0.2 includes the shaped button hover fix. Existing journey palettes remain body-scoped.
+
+The structural mode determines desktop rail allocation: full 176px, relaxed 136px, compact 88px. At 720px and below, the grid places the navigation above the header and content, with no reserved side column. Mobile resizing does not change the active mode or menu data. Disabled navigation removes its grid allocation. Dynamic loading passes both the current role and mode before the first remote render.
