@@ -4,7 +4,7 @@ Administrative interface for managing Ngx-Workshop.io
 
 ## Shared design system
 
-The shell installs `@tmdjr/ngx-workshop-design-system` at `21.0.1` and shares its
+The shell installs `@tmdjr/ngx-workshop-design-system` at `21.0.4` and shares its
 JavaScript entry point as a strict singleton. Remotes must install and share the
 same version. The Sass `theme` entry is compiled by the host, not federated.
 
@@ -68,3 +68,11 @@ The document editor's local document service on localhost:3007 is independent of
 Structural remotes opt into `.ngx-design-system`; their Material menus use `.ngx-design-system-overlay`. The shell supplies Ngx semantic tokens, button styles and the scoped Material adapter, including portaled overlays. Package version 21.0.2 includes the shaped button hover fix. Existing journey palettes remain body-scoped.
 
 The structural mode determines desktop rail allocation: full 176px, relaxed 136px, compact 88px. At 720px and below, the grid places the navigation above the header and content, with no reserved side column. Mobile resizing does not change the active mode or menu data. Disabled navigation removes its grid allocation. Dynamic loading passes both the current role and mode before the first remote render.
+
+### Orchestrator heading API compatibility — 2026-10-27
+
+The shell and orchestrator pin published design system 21.0.4 in their package
+manifests, lockfiles and strict federation requirements. This release supplies
+the panel header slot and staggered-heading inputs used by the orchestrator.
+Deploy the rebuilt shell before the rebuilt remote. Regenerate dependency locks
+with CI's Node 22/npm 10 toolchain and verify a clean npm ci before release.
