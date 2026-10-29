@@ -80,7 +80,7 @@ module.exports = withModuleFederationPlugin({
     '@tmdjr/ngx-theme-picker': {
       singleton: true,
       strictVersion: true,
-      requiredVersion: '21.0.3',
+      requiredVersion: '21.0.5',
     },
 
     '@tmdjr/ngx-user-metadata': {

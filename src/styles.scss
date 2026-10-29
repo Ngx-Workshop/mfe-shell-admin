@@ -11,31 +11,8 @@
 @use 'ngx-editor-js2-mermaidjs-drag-preview.scss';
 @use 'ngx-editor-js2-panel-drag-preview.scss';
 
-// Supply shared assets once; migrate Material tokens per workspace while legacy
-// remotes continue to use the existing body palette selected by the theme picker.
-@include ngx.button-styles();
-@include ngx.code-styles();
-
-:root {
-  @include ngx.tokens();
-}
-
-.ngx-design-system,
-.ngx-design-system-overlay {
-  @include ngx.material-adapter();
-  color-scheme: dark;
-  color: var(--ngx-color-text);
-  font-family: var(--ngx-font-body);
-
-  &, *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--ngx-color-primary);
-    outline-offset: 4px;
-  }
-}
+// Root themes also reach federated remotes and CDK overlays.
+@include ngx.theme();
 
 // Public CDK backdrop class, scoped to migrated dialogs.
 .ngx-design-system-backdrop {
@@ -169,112 +146,7 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-}
-
-body.light-mode {
-  color-scheme: light;
-  color: var(--mat-sys-on-surface);
-  background-color: var(--mat-sys-surface);
-}
-
-body.dark-mode {
-  color-scheme: dark;
-  color: var(--mat-sys-on-surface);
-  background-color: var(--mat-sys-surface);
-}
-
-body {
-  &.red-palette {
-    @include mat.theme(
-      (
-        color: mat.$red-palette,
-      )
-    );
-  }
-
-  &.green-palette {
-    @include mat.theme(
-      (
-        color: mat.$green-palette,
-      )
-    );
-  }
-
-  &.blue-palette {
-    @include mat.theme(
-      (
-        color: mat.$blue-palette,
-      )
-    );
-  }
-
-  &.yellow-palette {
-    @include mat.theme(
-      (
-        color: mat.$yellow-palette,
-      )
-    );
-  }
-
-  &.cyan-palette {
-    @include mat.theme(
-      (
-        color: mat.$cyan-palette,
-      )
-    );
-  }
-
-  &.magenta-palette {
-    @include mat.theme(
-      (
-        color: mat.$magenta-palette,
-      )
-    );
-  }
-
-  &.orange-palette {
-    @include mat.theme(
-      (
-        color: mat.$orange-palette,
-      )
-    );
-  }
-  &.chartreuse-palette {
-    @include mat.theme(
-      (
-        color: mat.$chartreuse-palette,
-      )
-    );
-  }
-  &.spring-green-palette {
-    @include mat.theme(
-      (
-        color: mat.$spring-green-palette,
-      )
-    );
-  }
-  &.azure-palette {
-    @include mat.theme(
-      (
-        color: mat.$azure-palette,
-      )
-    );
-  }
-  &.violet-palette {
-    @include mat.theme(
-      (
-        color: mat.$violet-palette,
-      )
-    );
-  }
-  &.rose-palette {
-    @include mat.theme(
-      (
-        color: mat.$rose-palette,
-      )
-    );
-  }
+  font-family: var(--ngx-font-body);
 }
 
 :root {

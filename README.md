@@ -4,17 +4,32 @@ Administrative interface for managing Ngx-Workshop.io
 
 ## Shared design system
 
-The shell installs `@tmdjr/ngx-workshop-design-system` at `21.0.4` and shares its
+The shell installs `@tmdjr/ngx-workshop-design-system` at `21.0.6` and shares its
 JavaScript entry point as a strict singleton. Remotes must install and share the
 same version. The Sass `theme` entry is compiled by the host, not federated.
 
-Global styles provide semantic Ngx tokens plus button, code and scoped backdrop styles.
-Migrated workspaces opt into the Material adapter with the `ngx-design-system`
-host class; dialogs use `panelClass: 'ngx-design-system-overlay'` and
-`backdropClass: 'ngx-design-system-backdrop'`. Select panels and tooltips also use
-the `ngx-design-system-overlay` class. This keeps overlay tokens consistent outside
-the remote's DOM. Existing body palette rules continue to serve legacy remotes.
-Standalone migrated remotes must also load the public theme and adapter locally.
+Global styles include `ngx.theme()` once. The shared picker selects the
+`data-ngx-theme` attribute on `<html>`; semantic and Material tokens inherit into
+all remotes and CDK overlays. Material prebuilt themes, legacy body palettes and
+the shell’s scoped dark adapters have been removed. Keep `ngx-design-system`
+and overlay classes for component/backdrop styling, but do not redeclare tokens
+or a dark Material adapter on those scopes. Standalone remotes can load the
+public theme locally for standalone use.
+
+### Picker release handoff
+
+Publish the updated sibling `ngx-theme-picker` project, then install its actual
+published version here (updating `package.json` and `package-lock.json`). Update
+the `@tmdjr/ngx-theme-picker` singleton requirement in `webpack.config.js` to
+match, and keep remote singleton requirements compatible. The current `21.0.3`
+dependency is intentionally unchanged until that release exists; its old service
+cannot select these root themes. The shell will show the design system’s default
+Neon theme until the new picker is installed.
+
+The updated picker offers Workshop, Neutral, Amber, Teal, NASA and Reese’s.
+Workshop, Amber, Teal, NASA and Reese’s support light/dark mode; Neutral is
+always dark. Existing saved Material palettes migrate to Workshop, retaining
+the saved mode. New profiles start in Workshop light mode.
 
 Testing build to delete the dist folder before building
 
