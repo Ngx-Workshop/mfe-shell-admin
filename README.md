@@ -18,13 +18,8 @@ public theme locally for standalone use.
 
 ### Picker release handoff
 
-Publish the updated sibling `ngx-theme-picker` project, then install its actual
-published version here (updating `package.json` and `package-lock.json`). Update
-the `@tmdjr/ngx-theme-picker` singleton requirement in `webpack.config.js` to
-match, and keep remote singleton requirements compatible. The current `21.0.3`
-dependency is intentionally unchanged until that release exists; its old service
-cannot select these root themes. The shell will show the design system’s default
-Neon theme until the new picker is installed.
+The shell installs and shares `@tmdjr/ngx-theme-picker` at `21.0.5`.
+Keep remote singleton requirements compatible with that version.
 
 The updated picker offers Workshop, Neutral, Amber, Teal, NASA and Reese’s.
 Workshop, Amber, Teal, NASA and Reese’s support light/dark mode; Neutral is
