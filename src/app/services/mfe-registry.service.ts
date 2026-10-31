@@ -51,6 +51,7 @@ export class MfeRegistryService {
   private getRemoteUrlBySubType(subType: StructuralSubType) {
     return this.remotes$.pipe(
       map((remotes) => this.mergeOverrideRemotesURLsFromLocalStorage(remotes)),
+      tap((remotes) => console.log('Merged remotes:', remotes)),
       map(
         (remotes) =>
           remotes.find((remote) => remote.structuralSubType === subType)
@@ -80,9 +81,9 @@ export class MfeRegistryService {
 
   // Called during provideAppInitializer
   loadMfeRemotes() {
-    return this.http.get<MfeRemoteDto[]>('/api/mfe-remotes/domain/admin').pipe(
-      tap((remotes) => this.remotes.next(remotes))
-    );
+    return this.http
+      .get<MfeRemoteDto[]>('/api/mfe-remotes/domain/admin')
+      .pipe(tap((remotes) => this.remotes.next(remotes)));
   }
 
   /**
