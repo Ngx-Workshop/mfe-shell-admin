@@ -51,13 +51,11 @@ export class MfeRegistryService {
   private getRemoteUrlBySubType(subType: StructuralSubType) {
     return this.remotes$.pipe(
       map((remotes) => this.mergeOverrideRemotesURLsFromLocalStorage(remotes)),
-      tap((remotes) => console.log('Merged remotes:', remotes)),
       map(
         (remotes) =>
           remotes.find((remote) => remote.structuralSubType === subType)
             ?.remoteEntryUrl
-      ),
-      tap((url) => console.log('Merged remotes:', url))
+      )
     );
   }
 
