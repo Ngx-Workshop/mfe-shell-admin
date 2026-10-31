@@ -9,17 +9,10 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  StructuralNavOverrideMode,
-  StructuralOverrideMode,
-} from '@tmdjr/ngx-mfe-orchestrator-contracts';
+import { StructuralOverrideMode } from '@tmdjr/ngx-mfe-orchestrator-contracts';
 import { Role } from '@tmdjr/ngx-navigational-list';
 import { WorkshopLogger } from '@tmdjr/ngx-workshop-logger';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-
-type StructuralMfeInputModes =
-  | StructuralOverrideMode
-  | StructuralNavOverrideMode;
 
 @Component({
   selector: 'ngx-structural-mfe',
@@ -39,10 +32,10 @@ export class StructuralMfeComponent implements OnInit {
   role$ = new BehaviorSubject<Role>('none');
 
   @Input()
-  set mode(value: StructuralMfeInputModes) {
+  set mode(value: StructuralOverrideMode) {
     this.mode$.next(value);
   }
-  mode$ = new BehaviorSubject<StructuralMfeInputModes>('disabled');
+  mode$ = new BehaviorSubject<StructuralOverrideMode>('disabled');
 
   constructor() {
     combineLatest([this.mode$, this.role$])
