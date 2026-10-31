@@ -55,7 +55,7 @@
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/lang-markdown": "^6.5.0",
     "@fsegurai/codemirror-theme-synthwave-84": "^6.0.0",
-    "@tmdjr/ngx-mfe-orchestrator-contracts": "^0.0.47",
+    "@tmdjr/ngx-mfe-orchestrator-contracts": "^0.0.57",
     "@types/jasmine": "~5.1.0",
     "codemirror": "^6.0.2",
     "jasmine-core": "~5.7.0",
