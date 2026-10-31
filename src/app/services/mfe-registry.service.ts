@@ -56,7 +56,8 @@ export class MfeRegistryService {
         (remotes) =>
           remotes.find((remote) => remote.structuralSubType === subType)
             ?.remoteEntryUrl
-      )
+      ),
+      tap((url) => console.log('Merged remotes:', url))
     );
   }
 
