@@ -86,3 +86,25 @@ manifests, lockfiles and strict federation requirements. This release supplies
 the panel header slot and staggered-heading inputs used by the orchestrator.
 Deploy the rebuilt shell before the rebuilt remote. Regenerate dependency locks
 with CI's Node 22/npm 10 toolchain and verify a clean npm ci before release.
+
+### Shared overlay policy adoption — 2026-10-31
+
+The shell and both migrated MFEs install design-system 21.0.10 and share a singleton
+compatible with ^21.0.10. Global theme() supplies overlay-policy() automatically.
+The duplicated ngx-design-system-backdrop block is removed; shared classes retain
+light/dark inheritance, transparent dismissal exclusions and preference fallbacks.
+The MFEs apply ngx-select-panel through native mat-select panelClass instead of
+local closing fixes. Shell theme integration tests use actual detached Material
+selects/dialogs to verify the loaded stylesheet in both schemes.
+
+The separate blur-backdrop rule/default remains for existing document-editor
+consumers; solid/fullscreen dialog configuration and current-menu-item treatment
+also remain app-owned. No existing legacy dialog API was removed by this adoption.
+See the navigation feature 017 and orchestrator feature 011 handoffs for local
+verification and hosted runtime acceptance limits. No deployment was performed.
+
+Local verification for overlay adoption: all 7 shell ChromeHeadless tests and the
+normal production build pass. Both MFE suites and production builds pass, including
+actual select closing tests after local fixes were removed. Compiled shell-only
+stylesheet fixtures pass light/dark portal and dialog-backdrop checks. Authenticated
+host/service acceptance remains separate; no deployment or live writes were performed.

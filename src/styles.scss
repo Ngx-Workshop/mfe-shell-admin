@@ -14,19 +14,7 @@
 // Root themes also reach federated remotes and CDK overlays.
 @include ngx.theme();
 
-// Public CDK backdrop class, scoped to migrated dialogs.
-.ngx-design-system-backdrop {
-  background: var(--ngx-overlay-backdrop-fallback);
-  @supports (backdrop-filter: blur(1px)) {
-    background: var(--ngx-overlay-backdrop-tint);
-    backdrop-filter: blur(var(--ngx-overlay-backdrop-blur))
-      saturate(var(--ngx-overlay-backdrop-saturation));
-  }
-  @media (prefers-reduced-transparency: reduce) {
-    background: var(--ngx-overlay-backdrop-fallback);
-    backdrop-filter: none;
-  }
-}
+// Shared overlay policy is emitted by theme(); legacy dialog styles below are app-specific.
 
 // @include mat.all-component-densities(-1); // Applies density to all components
 

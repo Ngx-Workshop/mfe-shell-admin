@@ -1,6 +1,25 @@
 import { TestBed } from '@angular/core/testing';
+import { Component, provideZonelessChangeDetection } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule, MatSelect } from '@angular/material/select';
+import { By } from '@angular/platform-browser';
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { NgxThemePicker, ThemePickerService } from '@tmdjr/ngx-theme-picker';
+
+@Component({
+  selector: 'shell-policy-select', imports: [MatSelectModule],
+  template: `<mat-form-field><mat-label>Domain</mat-label>
+    <mat-select value="admin" panelClass="ngx-design-system-overlay ngx-select-panel">
+      <mat-option value="admin">Admin</mat-option><mat-option value="workshop">Workshop</mat-option>
+    </mat-select></mat-form-field>`,
+})
+class ShellPolicySelect {}
+@Component({
+  selector: 'shell-policy-dialog', imports: [MatDialogModule],
+  template: '<h2 mat-dialog-title>Shared policy</h2><mat-dialog-content>Document theme inherited.</mat-dialog-content>',
+})
+class ShellPolicyDialog {}
 
 describe('Installed theme picker with shell global styles', () => {
   let previousTheme: string | null;
@@ -57,6 +76,36 @@ describe('Installed theme picker with shell global styles', () => {
       }
     }
     expect(colors.size).toBe(11);
+  });
+
+  it('supplies detached select and dialog policy from the shell stylesheet in light and dark modes', async () => {
+    TestBed.configureTestingModule({ imports: [ShellPolicySelect, ShellPolicyDialog],
+      providers: [provideZonelessChangeDetection(), {provide: OVERLAY_DEFAULT_CONFIG, useValue: {usePopover: false}}] });
+    const fixture = TestBed.createComponent(ShellPolicySelect);
+    fixture.detectChanges(); await fixture.whenStable();
+    const select = fixture.debugElement.query(By.directive(MatSelect)).componentInstance as MatSelect;
+    const container = TestBed.inject(OverlayContainer).getContainerElement();
+    for (const [theme, scheme] of [['light', 'light'], ['neon', 'dark']]) {
+      document.documentElement.setAttribute('data-ngx-theme', theme);
+      select.open(); fixture.detectChanges(); await fixture.whenStable();
+      const panel = select.panel.nativeElement as HTMLElement;
+      expect(container.contains(panel)).toBeTrue();
+      expect(panel.classList.contains('ngx-select-panel')).toBeTrue();
+      expect(getComputedStyle(panel).colorScheme).toBe(scheme);
+      expect(getComputedStyle(panel).animationFillMode).toBe('forwards');
+      const backdrop = document.querySelector('.cdk-overlay-transparent-backdrop')!;
+      expect(getComputedStyle(backdrop).backdropFilter).toBe('none');
+      expect(getComputedStyle(backdrop).backgroundColor).toMatch(/^rgba\(\d+, \d+, \d+, 0\)$/);
+      select.close(); fixture.detectChanges(); await fixture.whenStable();
+      const dialog = TestBed.inject(MatDialog).open(ShellPolicyDialog, {
+        panelClass:'ngx-design-system-overlay', backdropClass:'ngx-design-system-backdrop',
+      });
+      fixture.detectChanges(); await fixture.whenStable();
+      const pane = document.querySelector('.cdk-overlay-pane.ngx-design-system-overlay')!;
+      expect(getComputedStyle(pane).colorScheme).toBe(scheme);
+      expect(getComputedStyle(document.querySelector('.ngx-design-system-backdrop')!).backdropFilter).toContain('blur(12px)');
+      dialog.close(); fixture.detectChanges(); await fixture.whenStable();
+    }
   });
 
   it('restores a saved selection during initialization without rendering a picker', () => {
